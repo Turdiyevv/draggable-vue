@@ -1,1 +1,58 @@
 // app global css in SCSS form
+.login_form{
+  width: 500px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  .btn_p{
+    display: flex;
+    justify-content: end;
+    margin: 10px 0;
+  }
+  .q-card{
+    border: 1px solid #e3e0e0;
+    padding: 20px !important;
+    .q-input{
+      margin: 10px 0 !important;
+    }
+  }
+}
+
+.container_task_page{
+  display: flex;
+  justify-content: space-around;
+  .task_container{
+    width: 100%;
+    margin: 10px;
+    background-color: #eae8e8;
+    border-radius: 12px;
+    min-height: 20vh;
+  }
+  .task_label{
+    background-color: white;
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #e3e0e0;
+    text-align: center;
+  }
+  .task_item{
+    border-radius: 12px;
+    border: 1px solid #e3e0e0;
+    padding: 5px;
+    margin: 5px;
+    background-color: white;
+  }
+}
+
+//defaults
+.q-card, .q-btn, .q-field__control {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.q-field--labeled .q-field__native{
+  color: #000 !important;
+}
+.q-btn{
+  text-transform: none !important;
+}
