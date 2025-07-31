@@ -12,11 +12,16 @@
           :group="{ name: 'tasks', pull: true, put: true }"
         >
           <template #item="{ element }">
-            <task-item :element="element" :status="status" @changeStatus="changeStatus" />
+            <task-item :element="element" :type="type" :status="status" @changeStatus="changeStatus" />
           </template>
         </draggable>
       </div>
     </div>
+
+      <div class="pagination">
+        <q-pagination v-model="page" :max="totalPages" direction-links/>
+      </div>
+
   </q-page>
 </template>
 
@@ -35,14 +40,26 @@ const status = ref([
 
 const cloneTask = (original) => ({ ...original });
 
+const page = ref(1);
+const perPage = ref(10);
+const totalPages = computed(() =>
+  Math.ceil(tasks.value.length / perPage.value)
+)
+
 const groupedTasks = computed(() => {
   const result = {};
   status.value.forEach((s) => (result[s.id] = []));
-  tasks.value.forEach((task) => {
+
+  const start = (page.value - 1) * perPage.value;
+  const end = start + perPage.value;
+  const paginatedTasks = tasks.value.slice(start, end);
+
+
+  for (const task of paginatedTasks) {
     if (result[task.status]) {
       result[task.status].push(task);
     }
-  });
+  }
   return result;
 });
 
@@ -63,43 +80,50 @@ function changeStatus({ statusId, element }) {
     tasks.value[index].status = statusId;
   }
 }
+
+
 const tasks = ref([
-  {id: 1, userId: 1, status: 5, desc: 'Description text test', text: "Task 1"},
-  {id: 2, userId: 2, status: 0, desc: 'Description text test', text: "Task 2"},
-  {id: 3, userId: 2, status: 5, desc: 'Description text test', text: "Task 3"},
-  {id: 4, userId: 1, status: 0, desc: 'Description text test', text: "Task 4"},
-  {id: 5, userId: 2, status: 0, desc: 'Description text test', text: "Task 5"},
-  {id: 6, userId: 2, status: 3, desc: 'Description text test', text: "Task 6"},
-  {id: 7, userId: 1, status: 0, desc: 'Description text test', text: "Task 7"},
-  {id: 8, userId: 2, status: 3, desc: 'Description text test', text: "Task 8"},
-  {id: 9, userId: 1, status: 0, desc: 'Description text test', text: "Task 9"},
-  {id: 10, userId: 2, status: 3, desc: 'Description text test', text: "Task 11"},
-  {id: 11, userId: 1, status: 3, desc: 'Description text test', text: "Task 12"},
-  {id: 12, userId: 1, status: 5, desc: 'Description text test', text: "Task 13"},
-  {id: 13, userId: 2, status: 0, desc: 'Description text test', text: "Task 14"},
-  {id: 14, userId: 2, status: 3, desc: 'Description text test', text: "Task 15"},
-  {id: 15, userId: 1, status: 3, desc: 'Description text test', text: "Task 16"},
-  {id: 16, userId: 2, status: 0, desc: 'Description text test', text: "Task 17"},
-  {id: 17, userId: 2, status: 1, desc: 'Description text test', text: "Task 18"},
-  {id: 18, userId: 1, status: 5, desc: 'Description text test', text: "Task 19"},
-  {id: 19, userId: 2, status: 1, desc: 'Description text test', text: "Task 20"},
-  {id: 20, userId: 2, status: 3, desc: 'Description text test', text: "Task 21"},
-  {id: 21, userId: 2, status: 1, desc: 'Description text test', text: "Task 22"},
-  {id: 22, userId: 1, status: 1, desc: 'Description text test', text: "Task 23"},
-  {id: 23, userId: 1, status: 5, desc: 'Description text test', text: "Task 24"},
-  {id: 24, userId: 2, status: 1, desc: 'Description text test', text: "Task 25"},
-  {id: 25, userId: 2, status: 3, desc: 'Description text test', text: "Task 26"},
-  {id: 26, userId: 1, status: 3, desc: 'Description text test', text: "Task 27"},
-  {id: 27, userId: 2, status: 1, desc: 'Description text test', text: "Task 28"},
-  {id: 28, userId: 2, status: 5, desc: 'Description text test', text: "Task 29"},
-  {id: 29, userId: 1, status: 2, desc: 'Description text test', text: "Task 30"},
-  {id: 30, userId: 1, status: 1, desc: 'Description text test', text: "Task 31"},
-  {id: 31, userId: 1, status: 2, desc: 'Description text test', text: "Task 32"},
-  {id: 32, userId: 2, status: 2, desc: 'Description text test', text: "Task 33"},
-  {id: 33, userId: 1, status: 2, desc: 'Description text test', text: "Task 34"},
-  {id: 34, userId: 1, status: 1, desc: 'Description text test', text: "Task 35"},
-  {id: 35, userId: 2, status: 2, desc: 'Description text test', text: "Task 36"},
-  {id: 36, userId: 2, status: 2, desc: 'Description text test', text: "Task 37"},
-  {id: 37, userId: 1, status: 5, desc: 'Description text test',text : "Task 38"}
+  {id: 1, userId: 1, status: 5, desc: 'Description text test', text: "Task 1", taskType: 2, deadLine: '01-01-2026'},
+  {id: 2, userId: 2, status: 0, desc: 'Description text test', text: "Task 2", taskType: 2, deadLine: '01-01-2026'},
+  {id: 3, userId: 2, status: 5, desc: 'Description text test', text: "Task 3", taskType: 0, deadLine: '01-01-2026'},
+  {id: 4, userId: 1, status: 2, desc: 'Description text test', text: "Task 4", taskType: 1, deadLine: '01-01-2026'},
+  {id: 5, userId: 2, status: 0, desc: 'Description text test', text: "Task 5", taskType: 2, deadLine: '01-01-2026'},
+  {id: 6, userId: 2, status: 3, desc: 'Description text test', text: "Task 6", taskType: 0, deadLine: '01-01-2026'},
+  {id: 7, userId: 1, status: 2, desc: 'Description text test', text: "Task 7", taskType: 1, deadLine: '01-01-2026'},
+  {id: 8, userId: 2, status: 3, desc: 'Description text test', text: "Task 8", taskType: 2, deadLine: '01-01-2026'},
+  {id: 9, userId: 1, status: 0, desc: 'Description text test', text: "Task 9", taskType: 0, deadLine: '01-01-2026'},
+  {id: 10, userId: 2, status: 1, desc: 'Description text test', text: "Task 11", taskType: 2, deadLine: '01-01-2026'},
+  {id: 11, userId: 1, status: 3, desc: 'Description text test', text: "Task 12", taskType: 0, deadLine: '01-01-2026'},
+  {id: 12, userId: 1, status: 5, desc: 'Description text test', text: "Task 13", taskType: 2, deadLine: '01-01-2026'},
+  {id: 13, userId: 2, status: 0, desc: 'Description text test', text: "Task 14", taskType: 1, deadLine: '01-01-2026'},
+  {id: 14, userId: 2, status: 2, desc: 'Description text test', text: "Task 15", taskType: 0, deadLine: '01-01-2026'},
+  {id: 15, userId: 1, status: 3, desc: 'Description text test', text: "Task 16", taskType: 1, deadLine: '01-01-2026'},
+  {id: 16, userId: 2, status: 0, desc: 'Description text test', text: "Task 17", taskType: 0, deadLine: '01-01-2026'},
+  {id: 17, userId: 2, status: 1, desc: 'Description text test', text: "Task 18", taskType: 1, deadLine: '01-01-2026'},
+  {id: 18, userId: 1, status: 5, desc: 'Description text test', text: "Task 19", taskType: 1, deadLine: '01-01-2026'},
+  {id: 19, userId: 2, status: 1, desc: 'Description text test', text: "Task 20", taskType: 0, deadLine: '01-01-2026'},
+  {id: 20, userId: 2, status: 3, desc: 'Description text test', text: "Task 21", taskType: 2, deadLine: '01-01-2026'},
+  {id: 21, userId: 2, status: 1, desc: 'Description text test', text: "Task 22", taskType: 1, deadLine: '01-01-2026'},
+  {id: 22, userId: 1, status: 1, desc: 'Description text test', text: "Task 23", taskType: 0, deadLine: '01-01-2026'},
+  {id: 23, userId: 1, status: 5, desc: 'Description text test', text: "Task 24", taskType: 1, deadLine: '01-01-2026'},
+  {id: 24, userId: 2, status: 0, desc: 'Description text test', text: "Task 25", taskType: 2, deadLine: '01-01-2026'},
+  {id: 25, userId: 2, status: 3, desc: 'Description text test', text: "Task 26", taskType: 0, deadLine: '01-01-2026'},
+  {id: 26, userId: 1, status: 3, desc: 'Description text test', text: "Task 27", taskType: 2, deadLine: '01-01-2026'},
+  {id: 27, userId: 2, status: 1, desc: 'Description text test', text: "Task 28", taskType: 1, deadLine: '01-01-2026'},
+  {id: 28, userId: 2, status: 5, desc: 'Description text test', text: "Task 29", taskType: 1, deadLine: '01-01-2026'},
+  {id: 29, userId: 1, status: 2, desc: 'Description text test', text: "Task 30", taskType: 2, deadLine: '01-01-2026'},
+  {id: 30, userId: 1, status: 0, desc: 'Description text test', text: "Task 31", taskType: 0, deadLine: '01-01-2026'},
+  {id: 31, userId: 1, status: 2, desc: 'Description text test', text: "Task 32", taskType: 1, deadLine: '01-01-2026'},
+  {id: 32, userId: 2, status: 2, desc: 'Description text test', text: "Task 33", taskType: 2, deadLine: '01-01-2026'},
+  {id: 33, userId: 1, status: 2, desc: 'Description text test', text: "Task 34", taskType: 0, deadLine: '01-01-2026'},
+  {id: 34, userId: 1, status: 1, desc: 'Description text test', text: "Task 35", taskType: 2, deadLine: '01-01-2026'},
+  {id: 35, userId: 2, status: 0, desc: 'Description text test', text: "Task 36", taskType: 1, deadLine: '01-01-2026'},
+  {id: 36, userId: 2, status: 3, desc: 'Description text test', text: "Task 37", taskType: 0, deadLine: '01-01-2026'},
+  {id: 37, userId: 1, status: 5, desc: 'Description text test',text : "Task 38", taskType: 2, deadLine: '01-01-2026'}
+])
+const type = ref([
+  {id: 0, text: "High"},
+  {id: 1, text: "Normal"},
+  {id: 2, text: "Low"}
 ])
 </script>

@@ -1,30 +1,86 @@
 <template>
-  <div class="task_item">
-    <q-select class=""
-      :options="status"
-      option-value="id"
-      option-label="text"
-      v-model="selectedOption"
-      @update:model-value="(val) => emitChange(val.id)"
-      filled
-      dense
-    />
-    <div class="task_text">{{ element }}</div>
+  <div class="task_item" :style="getBorder">
+    <div class="element_page">
+      <div style="display: flex;">
+        <q-select class="q_select" color="gray"
+          :options="status"
+          option-value="id"
+          option-label="text"
+          v-model="selectedOption"
+          @update:model-value="(val) => emitChange(val.id)"
+          filled dense
+        />
+      </div>
+      <div class="action_panel">
+        <q-icon class="edit_c" color="orange" name="edit"></q-icon>
+        <q-icon class="edit_c" color="red" name="delete"></q-icon>
+      </div>
+    </div>
+    <div class="task_text">
+      <div class="text-bold">{{element.text}}</div>
+      <div>{{element.desc}}</div>
+      <div>{{element.userId}}</div>
+      <div class="bottom_panel">
+        <div class="type_class">
+          <q-select
+            class="q_select"
+            :bg-color="bgColor"
+            :options="type"
+            option-value="id"
+            option-label="text"
+            v-model="selectedTypeOption"
+            filled dense
+          />
+        </div>
+<!--            @update:model-value="(val) => emitChange(val.id)"-->
+        <div>{{element.deadLine}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue'
 
 const props = defineProps({
   element: Object,
   status: Array,
+  type: Array
 });
 const emit = defineEmits(['changeStatus']);
 
 const selectedOption = ref(null);
+const selectedTypeOption = ref(null);
 
-
+function emitChange(id) {
+  emit('changeStatus', { statusId: id, element: props.element });
+}
+const bgColor = computed(() => {
+  if (!selectedTypeOption.value) return 'grey'
+  switch (selectedTypeOption.value.id) {
+    case 0:
+      return 'red'
+    case 1:
+      return 'green'
+    case 2:
+      return 'grey'
+    default:
+      return 'grey'
+  }
+})
+const getBorder = computed(() => {
+  if (!selectedTypeOption.value) return 'border: 1px solid grey'
+  switch (selectedTypeOption.value.id) {
+    case 0:
+      return 'border: 1px solid red'
+    case 1:
+      return 'border: 1px solid green'
+    case 2:
+      return 'border: 1px solid grey'
+    default:
+      return 'border: 1px solid grey'
+  }
+})
 watch(
   () => props.element.status,
   (newVal) => {
@@ -33,15 +89,26 @@ watch(
 );
 onMounted(() => {
   selectedOption.value = props.status.find(s => s.id === props.element.status);
+  selectedTypeOption.value = props.type.find(s => s.id === props.element.taskType);
 });
 
-function emitChange(id) {
-  emit('changeStatus', { statusId: id, element: props.element });
-}
 </script>
 
 <style scoped>
 .color-c{
   border: 1px solid red !important;
+}
+.q_bg_select0{
+  .q-field__control{
+    background-color: red !important;
+    color: white !important;
+  }
+}
+.q_type_select{
+  >>>.q-field__native,
+      >>>.q-placeholder,
+      >>>.q-field__label{
+    color: white !important;
+  }
 }
 </style>
