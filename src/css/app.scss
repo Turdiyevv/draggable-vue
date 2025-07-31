@@ -19,29 +19,66 @@
 }
 
 .container_task_page{
+  overflow-x: auto;
   display: flex;
   justify-content: space-around;
   .task_container{
     width: 100%;
+    min-width: 300px;
     margin: 10px;
-    background-color: #eae8e8;
     border-radius: 12px;
-    min-height: 20vh;
+    .draggable{
+      border-radius: 12px;
+      background-color: #eae8e8;
+      min-height: 700px;
+      padding: 1px;
+    }
+    .task_label{
+      background-color: white;
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #e3e0e0;
+      text-align: center;
+    }
+    .task_item{
+      border-radius: 12px;
+      border: 1px solid #e3e0e0;
+      padding: 5px;
+      margin: 5px;
+      background-color: white;
+    }
   }
-  .task_label{
-    background-color: white;
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
+}
+.element_page{
+  height: fit-content;
+  .edit_c{
+    width: 24px;
+    height: 24px;
     border: 1px solid #e3e0e0;
-    text-align: center;
+    padding: 1px;
+    border-radius: 4px;
   }
-  .task_item{
-    border-radius: 12px;
-    border: 1px solid #e3e0e0;
-    padding: 5px;
-    margin: 5px;
-    background-color: white;
+  .q_select {
+    width: 100px;
+    height: 25px;
+    min-height: 25px;
+    font-size: 10px;
+    margin: 0 3px;
+    .q-field__control, .q-field__append {
+      padding: 0 3px;
+      border-radius: 4px !important;
+      height: 25px !important;
+      min-height: 25px !important;
+    }
+    .q-field__native,
+    .q-placeholder,
+    .q-field__label {
+      padding: 0;
+      min-height: fit-content;
+      height: 25px !important;
+      font-size: 12px;
+    }
   }
 }
 

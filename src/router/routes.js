@@ -12,11 +12,11 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/Cabinet/IndexPage.vue')
+        component: () => import('pages/Cabinet/tasks/IndexPage.vue')
       },
       {
         path: '/info',
-        component: () => import('pages/Cabinet/myInfo.vue')
+        component: () => import('pages/Cabinet/myInfo/myInfo.vue')
       }
     ],
   },
