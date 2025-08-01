@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 const user = ref({
   username: '',
   age: '',
+  userId:'',
   region: '',
   profession: '',
 });
@@ -16,6 +17,7 @@ async function saveInfo(){
     localStorage.setItem('user', JSON.stringify({
       username: user.value.username,
       age: user.value.age,
+      userId: user.value.userId,
       region: user.value.region,
       profession: user.value.profession,
     }));
@@ -42,7 +44,7 @@ onMounted(() => {
       <q-input :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.region" dense="dense" />
       <q-input :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.profession" dense="dense" />
       <div class="flex justify-between">
-        <q-btn @click="edit=false" style="width: 48%" unelevated color="orange">edit</q-btn>
+        <q-btn @click="edit=!edit" style="width: 48%" unelevated color="orange">edit</q-btn>
         <q-btn @click="saveInfo" :disable="edit" style="width: 48%" unelevated color="positive">save</q-btn>
       </div>
     </div>

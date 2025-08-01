@@ -33,8 +33,13 @@
     .draggable{
       border-radius: 12px;
       //background-color: #eae8e8;
-      min-height: 600px;
       padding: 1px;
+    }
+    .add_task{
+      background-color: #e3e0e0;
+      padding: 4px;
+      border-radius: 12px;
+      margin: 0 6px;
     }
     .task_label{
       background-color: white;
@@ -115,8 +120,8 @@
       font-size: 10px;
       margin: 0 0 0 2px;
       .q-field__control, .q-field__append {
-        padding: 0 4px;
-        border-radius: 4px !important;
+        padding: 0 2px 0 8px;
+        border-radius: 8px !important;
         height: 26px !important;
         min-height: 26px !important;
       }
@@ -130,6 +135,8 @@
         font-size: 12px;
       }
       .q-icon{
+        padding: 0;
+        width: 12px;
         color: white !important;
       }
     }
@@ -160,7 +167,14 @@
     border-radius: 12px;
   }
 }
-
+.q-dialog{
+  .q-dialog__backdrop {
+      backdrop-filter: blur(4px) saturate(150%);
+    }
+  .q-card{
+    width: 100%;
+  }
+}
 
 //defaults
 .q-card, .q-btn, .q-field__control {

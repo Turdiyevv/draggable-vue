@@ -30,16 +30,16 @@ import { useRouter } from 'vue-router'
 const router = useRouter();
 const linksList = [
   {
-    title: 'My task',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: '/tasks',
-  },
-  {
     title: 'My info',
     caption: 'Information',
     icon: 'code',
     link: '/info',
+  },
+  {
+    title: 'My task',
+    caption: 'quasar.dev',
+    icon: 'school',
+    link: '/tasks',
   },
   {
     title: 'Discord Chat Channel',

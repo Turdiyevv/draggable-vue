@@ -24,6 +24,7 @@ async function handleLogin() {
     localStorage.setItem('user', JSON.stringify({
       username: username.value,
       age: 25,
+      userId: 1,
       region: 'Tashkent',
       profession: 'Programmer',
     }));

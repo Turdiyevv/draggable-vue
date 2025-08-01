@@ -12,8 +12,8 @@
         />
       </div>
       <div class="action_panel">
-        <q-icon class="edit_c" color="orange" name="edit"></q-icon>
-        <q-icon class="edit_c" color="red" name="delete"></q-icon>
+        <q-icon @click="editOpen" class="edit_c cursor-pointer" color="orange" name="edit"></q-icon>
+        <q-icon @click="deleteFunction" class="edit_c cursor-pointer" color="red" name="delete"></q-icon>
       </div>
     </div>
     <div class="task_text">
@@ -36,11 +36,15 @@
         <div>{{element.deadLine}}</div>
       </div>
     </div>
+
+    <ad-dialog :isOpenModal="isOpenModal" :element="element" @closeDialog="editOpen"/>
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
+import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
 
 const props = defineProps({
   element: Object,
@@ -48,6 +52,14 @@ const props = defineProps({
   type: Array
 });
 const emit = defineEmits(['changeStatus']);
+
+const isOpenModal = ref(false);
+const element = computed(() => {return props.element});
+function editOpen() {
+  isOpenModal.value = !isOpenModal.value;
+}
+function deleteFunction() {
+}
 
 const selectedOption = ref(null);
 const selectedTypeOption = ref(null);

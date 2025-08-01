@@ -15,6 +15,10 @@
             <task-item :element="element" :type="type" :status="status" @changeStatus="changeStatus" />
           </template>
         </draggable>
+            <div class="add_task flex align-center cursor-pointer" @click="addOpen(x.id)">
+              <q-icon name="add" color="red" size="sm"/>
+              <div class="flex justify-center q-mx-auto">add task</div>
+            </div>
       </div>
     </div>
 
@@ -22,6 +26,12 @@
         <q-pagination v-model="page" :max="totalPages" direction-links/>
       </div>
 
+    <ad-dialog
+      :isOpenModal="isOpenModal"
+      @closeDialog="addOpen"
+      :statusId="statusId"
+      @upsertTask="upsertTask"
+    />
   </q-page>
 </template>
 
@@ -29,6 +39,21 @@
 import draggable from 'vuedraggable'
 import { computed, ref } from 'vue'
 import TaskItem from 'pages/Cabinet/tasks/components/taskItem.vue'
+import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
+
+const isOpenModal = ref(false);
+const statusId = ref(null);
+function addOpen(id) {
+  if (typeof id === 'number') {
+    statusId.value = id;
+  }
+  isOpenModal.value = !isOpenModal.value;
+}
+
+function upsertTask(data) {
+  console.log(data);
+}
+
 
 const status = ref([
   {id: 0, text: "Registered"},
@@ -37,15 +62,12 @@ const status = ref([
   {id: 3, text: "Testing"},
   {id: 5, text: "Verified"},
 ])
-
 const cloneTask = (original) => ({ ...original });
-
 const page = ref(1);
 const perPage = ref(10);
 const totalPages = computed(() =>
   Math.ceil(tasks.value.length / perPage.value)
 )
-
 const groupedTasks = computed(() => {
   const result = {};
   status.value.forEach((s) => (result[s.id] = []));
@@ -53,7 +75,6 @@ const groupedTasks = computed(() => {
   const start = (page.value - 1) * perPage.value;
   const end = start + perPage.value;
   const paginatedTasks = tasks.value.slice(start, end);
-
 
   for (const task of paginatedTasks) {
     if (result[task.status]) {

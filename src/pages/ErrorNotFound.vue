@@ -10,7 +10,7 @@
         color="white"
         text-color="blue"
         unelevated
-        to="/"
+        to="/info"
         label="Go Home"
         no-caps
       />
