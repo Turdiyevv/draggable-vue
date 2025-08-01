@@ -11,7 +11,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '',
+        path: '/tasks',
         component: () => import('pages/Cabinet/tasks/IndexPage.vue')
       },
       {

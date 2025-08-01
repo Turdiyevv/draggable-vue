@@ -1,45 +1,45 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
+    <q-header style="background-color: #f5f5f5" class="q-ma-sm q-badge--rounded">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <q-btn to="/auth" unelevated color="red" icon="logout"></q-btn>
+        <q-btn color="black" flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-toolbar-title style="color: #1d1d1d">{{user.username}}</q-toolbar-title>
+        <q-btn @click="logOut" size="sm" outline unelevated color="red" icon="logout"></q-btn>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header>
-          <q-btn to="/info" outline style="width: 100%" icon="person">Turdiyev Sherbek</q-btn>
-        </q-item-label>
+    <q-drawer v-model="leftDrawerOpen" show-if-above>
+      <q-list class="q-py-xl q-px-sm">
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <router-view />
+    <q-page-container class="">
+      <div class="q-ma-sm q-mt-lg">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
 const linksList = [
   {
     title: 'My task',
     caption: 'quasar.dev',
     icon: 'school',
-    link: '/',
+    link: '/tasks',
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
+    title: 'My info',
+    caption: 'Information',
     icon: 'code',
-    link: 'https://github.com/quasarframework',
+    link: '/info',
   },
   {
     title: 'Discord Chat Channel',
@@ -48,10 +48,21 @@ const linksList = [
     link: 'https://chat.quasar.dev',
   }
 ]
-
 const leftDrawerOpen = ref(false)
-
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+async function logOut() {
+  localStorage.clear();
+  router.push('/auth');
+}
+const user = ref({});
+onMounted(() => {
+  const savedUser = localStorage.getItem('user')
+  if (savedUser) {
+    user.value = JSON.parse(savedUser)
+  }
+})
 </script>
+<style scoped>
+</style>
