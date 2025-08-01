@@ -187,3 +187,42 @@
 .q-btn{
   text-transform: none !important;
 }
+.q-router-link--exact-active{
+  background-color: #1976d2;
+  color: white !important;
+  .q-item__label{
+    color: antiquewhite;
+  }
+}
+
+///dark-light
+body.body--dark .q-router-link--exact-active {
+  background-color: #a6a5a5;
+}
+body.body--dark .q-item__label{
+  color: black;
+}
+body.body--dark .pic_c{
+  color: black;
+}
+body.body--dark .q-field__native{
+  color: black;
+}
+body.body--dark .q-field__inner{
+  color: black;
+}
+body.body--dark .task_label{
+  color: black;
+}
+body.body--dark .task_item{
+  color: black;
+}
+body.body--dark .add_task{
+  color: black;
+}
+body.body--dark .q-item{
+  color: black;
+}
+body.body--dark .q-field__focusable-action{
+  color: orange;
+}

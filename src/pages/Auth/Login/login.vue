@@ -13,7 +13,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import {useUserStore} from '../../../stores/user.js'
 
+const userStore = useUserStore();
 const router = useRouter();
 const loadingBtn = ref(false);
 const username = ref('');
@@ -21,13 +23,13 @@ const password = ref('123456');
 async function handleLogin() {
   if (username.value !== '' && password.value !== '') {
     loadingBtn.value = true;
-    localStorage.setItem('user', JSON.stringify({
+    userStore.setUser({
       username: username.value,
       age: 25,
       userId: 1,
       region: 'Tashkent',
       profession: 'Programmer',
-    }));
+    })
     loadingBtn.value = false;
     router.push('/info');
   }

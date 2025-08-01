@@ -1,8 +1,9 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
+import { useUserStore } from '../../../../stores/user.js'
 
+const userStore = useUserStore()
 const dialog = ref(false)
-
 const props = defineProps({
   isOpenModal: Boolean,
   statusId: Number,
@@ -54,17 +55,12 @@ async function upsertTask() {
   emit('upsertTask', Task.value)
   closeDialog()
 }
-
+const userId = computed(() => userStore.user.userId);
+const statusId = computed(() => props.statusId ?? props.element.status);
 watch(
   () => props.isOpenModal,
   (val) => {
     dialog.value = val
-  },
-)
-watch(
-  () => props.statusId,
-  (val) => {
-    Task.value.status = val;
   },
 )
 watch(
@@ -103,7 +99,8 @@ watch(
       </q-card-actions>
       <q-card-section>
         <div>
-          User {{ Task?.userId }} <q-chip size="sm">{{ getStatus(Task?.status)}}</q-chip>
+          <span style="text-decoration: underline">User {{ userId }}</span>
+          <q-chip outline color="teal" size="sm">{{ getStatus(statusId)}}</q-chip>
         </div>
         <q-input class="q-my-sm bg-white" label="Text" outlined v-model="Task.name" dense="dense" />
         <q-input class="q-my-sm bg-white" label="Description" outlined v-model="Task.description" dense="dense" />

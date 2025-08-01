@@ -45,7 +45,9 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
+import { useUserStore } from '../../../../stores/user.js'
 
+const userStore = useUserStore()
 const props = defineProps({
   element: Object,
   status: Array,
@@ -84,13 +86,13 @@ const getBorder = computed(() => {
   if (!selectedTypeOption.value) return 'border: 1px solid grey'
   switch (selectedTypeOption.value.id) {
     case 0:
-      return 'border: 1px solid red'
+      return 'border: 1px solid red; box-shadow: 0 0 5px 1px red'
     case 1:
-      return 'border: 1px solid green'
+      return 'border: 1px solid green; box-shadow: 0 0 5px 1px green'
     case 2:
-      return 'border: 1px solid grey'
+      return 'border: 1px solid grey; box-shadow: 0 0 5px 1px grey'
     default:
-      return 'border: 1px solid grey'
+      return 'border: 1px solid grey; box-shadow: 0 0 5px 1px grey'
   }
 })
 watch(
