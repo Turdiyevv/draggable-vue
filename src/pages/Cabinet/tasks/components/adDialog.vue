@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useUserStore } from '../../../../stores/user.js'
+import { useQuasar } from 'quasar'
 
 const userStore = useUserStore()
 const dialog = ref(false)
@@ -51,11 +52,13 @@ function getType(id) {
 function selectTask(id) {
   Task.value.taskType = id
 }
+const redSelect = ref(false);
 async function upsertTask() {
-  Task.value.userId = userId.value;
-  Task.value.status = statusId.value;
-  emit('upsertTask', Task.value);
-  closeDialog();
+    redSelect.value = false;
+    Task.value.userId = userId.value;
+    Task.value.status = statusId.value;
+    emit('upsertTask', Task.value);
+    closeDialog();
 }
 const userId = computed(() => userStore.user.userId);
 const statusId = computed(() => props.statusId ?? props.element.status);
@@ -88,6 +91,25 @@ watch(
     }
   },
 )
+const $q = useQuasar()
+function onSubmit () {
+  if (!Task.value.text || !Task.value.desc || !Task.value.deadLine) {
+    $q.notify({
+      color: 'red-5',
+      textColor: 'white',
+      icon: 'warning',
+      message: 'Please fill in all required fields'
+    });
+    return false;
+  }
+
+  $q.notify({
+    color: 'green-4',
+    textColor: 'white',
+    icon: 'cloud_done',
+    message: 'Submitted successfully!'
+  });
+}
 </script>
 
 <template>
@@ -98,44 +120,52 @@ watch(
         <q-icon @click="closeDialog" color="red" class="cursor-pointer" name="close" size="sm" />
       </q-card-actions>
       <q-card-section>
-        <div>
-          <span style="text-decoration: underline">User {{ userId }}</span>
-          <q-chip outline color="teal" size="sm">{{ getStatus(statusId)}}</q-chip>
-        </div>
-        <q-input :readonly="noEdit" clearable class="q-my-sm bg-white" label="Text" outlined v-model="Task.text" dense="dense" />
-        <q-input :readonly="noEdit" clearable class="q-my-sm bg-white" label="Description" outlined v-model="Task.desc" dense="dense" />
-
-
-        <div class="flex justify-between items-start">
-          <div style="max-width: 300px">
-            <q-input :readonly="noEdit" label="Deadline" filled v-model="Task.deadLine" mask="date" :rules="['date']">
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date v-model="Task.deadLine">
-                      <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Ok" color="primary" flat />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
+        <q-form @submit="upsertTask">
+          <div>
+            <span style="text-decoration: underline">User {{ userId }}</span>
+            <q-chip outline color="teal" size="sm">{{ getStatus(statusId)}}</q-chip>
           </div>
-          <q-btn :disable="noEdit" style="width: 200px; height: 48px" color="grey" unelevated
-                 :label="[0, 1, 2].includes(Task.taskType) ? getType(Task.taskType) : 'Select type'">
-            <q-menu auto-close transition-show="scale" transition-hide="scale">
-              <q-list style="width: 100px">
-                <q-item @click="selectTask(x.id)" v-for="x in type" :key="x.id" clickable>
-                  <q-item-section>{{ x.text }}</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-btn>
-        </div>
-        <div class="flex justify-end q-mt-sm">
-          <q-btn :disable="noEdit" @click="upsertTask" color="green" unelevated label="Save"></q-btn>
-        </div>
+          <q-input
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :readonly="noEdit" clearable class="q-my-sm bg-white" label="Text" outlined v-model="Task.text" dense="dense" />
+          <q-input
+            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :readonly="noEdit" clearable class="q-my-sm bg-white" label="Description" outlined v-model="Task.desc" dense="dense" />
+          <div class="flex justify-between items-start">
+            <div style="max-width: 300px">
+              <q-input
+                :rules="[ val => val && val.length > 0 || 'Please type something']"
+                :readonly="noEdit" label="Deadline" filled v-model="Task.deadLine" mask="date">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="Task.deadLine">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Ok" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <q-btn :disable="noEdit" style="width: 200px; height: 48px" unelevated
+                   :label="[0, 1, 2].includes(Task.taskType) ? getType(Task.taskType) : 'Select type'"
+                   :color="!redSelect ? 'grey' : 'red'"
+            >
+              <q-menu auto-close transition-show="scale" transition-hide="scale">
+                <q-list style="width: 100px">
+                  <q-item @click="selectTask(x.id)" v-for="x in type" :key="x.id" clickable>
+                    <q-item-section>{{ x.text }}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+          </div>
+          <div class="flex justify-end q-mt-sm">
+            <q-btn :disable="noEdit" type="submit" color="green" unelevated label="Save"></q-btn>
+          </div>
+        </q-form>
       </q-card-section>
     </q-card>
   </q-dialog>
