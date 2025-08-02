@@ -37,8 +37,12 @@
       </div>
     </div>
 
-    <ad-dialog :isOpenModal="isOpenModal" :element="element" @closeDialog="editOpen"/>
-
+    <ad-dialog
+      :isOpenModal="isOpenModal"
+      :element="element"
+      @closeDialog="editOpen"
+      @upsertTask="upsertTask"
+    />
   </div>
 </template>
 
@@ -53,14 +57,19 @@ const props = defineProps({
   status: Array,
   type: Array
 });
-const emit = defineEmits(['changeStatus']);
+const emit = defineEmits(['changeStatus', 'updateTask', 'deleteTask']);
 
 const isOpenModal = ref(false);
 const element = computed(() => {return props.element});
+
 function editOpen() {
   isOpenModal.value = !isOpenModal.value;
 }
 function deleteFunction() {
+  emit('deleteTask', element.value)
+}
+function upsertTask(data) {
+  emit('updateTask', data);
 }
 
 const selectedOption = ref(null);

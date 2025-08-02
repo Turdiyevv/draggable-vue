@@ -31,10 +31,10 @@ function getStatus(id) {
 const Task = ref({
   id: null,
   userId: null,
-  name: '',
-  description: '',
+  text: '',
+  desc: '',
   status: null,
-  type: null,
+  taskType: null,
   deadLine: '',
 })
 const type = ref([
@@ -49,44 +49,44 @@ function getType(id) {
   }
 }
 function selectTask(id) {
-  Task.value.type = id
+  Task.value.taskType = id
 }
 async function upsertTask() {
-  emit('upsertTask', Task.value)
-  closeDialog()
+  Task.value.userId = userId.value;
+  Task.value.status = statusId.value;
+  emit('upsertTask', Task.value);
+  closeDialog();
 }
 const userId = computed(() => userStore.user.userId);
 const statusId = computed(() => props.statusId ?? props.element.status);
+const noEdit = ref(false);
 watch(
   () => props.isOpenModal,
   (val) => {
-    dialog.value = val
-  },
-)
-watch(
-  () => props.element,
-  (val) => {
-    if (val) {
-      Task.value.id = val.id || null
-      Task.value.userId = val.userId || null
-      Task.value.name = val.text || ''
-      Task.value.description = val.desc || ''
-      Task.value.status = val.status || null
-      Task.value.type = val.taskType || null
-      Task.value.deadLine = val.deadLine || ''
-    } else {
+    dialog.value = val;
+    if (val === true && props.element) {
+      Task.value.id = props.element.id || null
+      Task.value.userId = props.element.userId || null
+      Task.value.text = props.element.text || ''
+      Task.value.desc = props.element.desc || ''
+      Task.value.status = props.element.status || null
+      Task.value.taskType = props.element.taskType || null
+      Task.value.deadLine = props.element.deadLine || ''
+      if (props.element.userId === userId.value) {
+        noEdit.value = false;
+      }else {noEdit.value = true;}
+    }else {
       Task.value = {
         id: null,
         userId: null,
-        name: '',
-        description: '',
+        text: '',
+        desc: '',
         status: null,
-        type: null,
+        taskType: null,
         deadLine: '',
       }
     }
   },
-  { immediate: true },
 )
 </script>
 
@@ -102,10 +102,28 @@ watch(
           <span style="text-decoration: underline">User {{ userId }}</span>
           <q-chip outline color="teal" size="sm">{{ getStatus(statusId)}}</q-chip>
         </div>
-        <q-input class="q-my-sm bg-white" label="Text" outlined v-model="Task.name" dense="dense" />
-        <q-input class="q-my-sm bg-white" label="Description" outlined v-model="Task.description" dense="dense" />
-        <div class="flex justify-between">
-          <q-btn color="grey" unelevated :label="[0, 1, 2].includes(Task.type) ? getType(Task.type) : 'Select type'">
+        <q-input :readonly="noEdit" clearable class="q-my-sm bg-white" label="Text" outlined v-model="Task.text" dense="dense" />
+        <q-input :readonly="noEdit" clearable class="q-my-sm bg-white" label="Description" outlined v-model="Task.desc" dense="dense" />
+
+
+        <div class="flex justify-between items-start">
+          <div style="max-width: 300px">
+            <q-input :readonly="noEdit" label="Deadline" filled v-model="Task.deadLine" mask="date" :rules="['date']">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="Task.deadLine">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Ok" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <q-btn :disable="noEdit" style="width: 200px; height: 48px" color="grey" unelevated
+                 :label="[0, 1, 2].includes(Task.taskType) ? getType(Task.taskType) : 'Select type'">
             <q-menu auto-close transition-show="scale" transition-hide="scale">
               <q-list style="width: 100px">
                 <q-item @click="selectTask(x.id)" v-for="x in type" :key="x.id" clickable>
@@ -114,12 +132,17 @@ watch(
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn @click="upsertTask" color="green" unelevated label="Save"></q-btn>
         </div>
-        <div class="flex justify-end q-mt-sm"></div>
+        <div class="flex justify-end q-mt-sm">
+          <q-btn :disable="noEdit" @click="upsertTask" color="green" unelevated label="Save"></q-btn>
+        </div>
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+>>>.q-my-sm{
+  border-radius: 12px;
+}
+</style>
