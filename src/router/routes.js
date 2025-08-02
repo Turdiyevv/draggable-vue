@@ -1,10 +1,11 @@
 const routes = [
   {
+    path: '/',
+    redirect: '/auth' // 🔁 Asosiy redirect
+  },
+  {
     path: '/auth',
     component: () => import('layouts/AuthLayout.vue'),
-    children: [
-
-    ]
   },
   {
     path: '/',
