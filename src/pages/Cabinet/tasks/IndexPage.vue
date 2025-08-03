@@ -80,7 +80,9 @@ import { computed, onMounted, ref, watchEffect } from 'vue'
 import TaskItem from 'pages/Cabinet/tasks/components/taskItem.vue'
 import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
 import { useUserStore } from 'stores/user.js'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar();
 const userStore = useUserStore()
 const isOpenModal = ref(false);
 const statusId = ref(null);
@@ -98,23 +100,39 @@ function generateUniqueId() {
 function upsertTask(data) {
   if (!data) return;
   if (data.id){
-    const index = tasks.value.findIndex((x) => x.id === data.id);
-    if (index > -1) {
-      tasks.value[index] = {...tasks.value[index], ...data};
+    try {
+      const index = tasks.value.findIndex((x) => x.id === data.id);
+      if (index > -1) {
+        tasks.value[index] = {...tasks.value[index], ...data};
+      }
+      successNotify('Updated task!', 'positive')
+    }catch (e) {
+      errorNotify('No updated task!')
     }
   } else {
-    const newTask = {
-      ...data,
-      id: generateUniqueId()
-    };
-    tasks.value.push(newTask);
-    tasks.value.unshift(newTask);
+    try {
+      const newTask = {
+        ...data,
+        id: generateUniqueId()
+      };
+      tasks.value.push(newTask);
+      tasks.value.unshift(newTask);
+
+      successNotify('Added task!', 'positive');
+    }catch (e) {
+      errorNotify('No added task!')
+    }
   }
 }
 function deleteTask(data){
-  const index = tasks.value.findIndex((x) => x.id === data.id);
-  if (index > -1){
-    tasks.value.splice(index, 1);
+  try {
+    const index = tasks.value.findIndex((x) => x.id === data.id);
+    if (index > -1){
+      tasks.value.splice(index, 1);
+    }
+    successNotify('Deleted task!', 'warning')
+  }catch (e) {
+    errorNotify('No deleted task!')
   }
 }
 
@@ -127,10 +145,8 @@ const status = ref([
 ])
 const cloneTask = (original) => ({ ...original });
 const page = ref(1);
-const perPage = ref(10);
-const totalPages = computed(() =>
-  Math.ceil(tasks.value.length / perPage.value)
-)
+const perPage = ref(20);
+const totalPages = computed(() => Math.ceil(tasks.value.length / perPage.value))
 const groupedTasks = computed(() => {
   const result = {};
   status.value.forEach((s) => (result[s.id] = []));
@@ -157,7 +173,6 @@ function onDragChange(evt, newStatusId) {
     }
   }
 }
-
 function changeStatus({ statusId, element }) {
   const index = tasks.value.findIndex((t) => t.id === element.id);
   if (index !== -1) {
@@ -165,14 +180,6 @@ function changeStatus({ statusId, element }) {
   }
 }
 
-// watchEffect(() => {
-//   if (page.value > totalPages.value) {
-//     page.value = totalPages.value;
-//   }
-//   if (page.value < 1) {
-//     page.value = 1;
-//   }
-// });
 const tasks = ref([
   {id: 1, userId: 1, status: 5, desc: 'Description text test', text: "Task 1", taskType: 2, deadLine: '2025/05/02'},
   {id: 2, userId: 2, status: 0, desc: 'Description text test', text: "Task 2", taskType: 2, deadLine: '2025/05/02'},
@@ -187,19 +194,19 @@ const tasks = ref([
   {id: 11, userId: 1, status: 3, desc: 'Description text test', text: "Task 12", taskType: 0, deadLine: '2025/05/02'},
   {id: 12, userId: 1, status: 5, desc: 'Description text test', text: "Task 13", taskType: 2, deadLine: '2025/07/10'},
   {id: 13, userId: 2, status: 0, desc: 'Description text test', text: "Task 14", taskType: 1, deadLine: '2025/05/02'},
-  {id: 14, userId: 2, status: 2, desc: 'Description text test', text: "Task 15", taskType: 0, deadLine: '2025/05/02'},
-  {id: 15, userId: 1, status: 3, desc: 'Description text test', text: "Task 16", taskType: 1, deadLine: '2025/05/02'},
-  {id: 16, userId: 2, status: 0, desc: 'Description text test', text: "Task 17", taskType: 0, deadLine: '2025/06/01'},
-  {id: 17, userId: 2, status: 1, desc: 'Description text test', text: "Task 18", taskType: 1, deadLine: '2025/06/01'},
-  {id: 18, userId: 1, status: 5, desc: 'Description text test', text: "Task 19", taskType: 1, deadLine: '2025/06/01'},
-  {id: 19, userId: 2, status: 1, desc: 'Description text test', text: "Task 20", taskType: 0, deadLine: '2025/06/01'},
-  {id: 20, userId: 2, status: 3, desc: 'Description text test', text: "Task 21", taskType: 2, deadLine: '2025/06/01'},
-  {id: 21, userId: 2, status: 1, desc: 'Description text test', text: "Task 22", taskType: 1, deadLine: '2025/06/01'},
-  {id: 22, userId: 1, status: 1, desc: 'Description text test', text: "Task 23", taskType: 0, deadLine: '2025/06/01'},
-  {id: 23, userId: 1, status: 5, desc: 'Description text test', text: "Task 24", taskType: 1, deadLine: '2025/06/01'},
-  {id: 24, userId: 2, status: 0, desc: 'Description text test', text: "Task 25", taskType: 2, deadLine: '2025/06/01'},
-  {id: 25, userId: 2, status: 3, desc: 'Description text test', text: "Task 26", taskType: 0, deadLine: '2025/06/01'},
-  {id: 26, userId: 1, status: 3, desc: 'Description text test', text: "Task 27", taskType: 2, deadLine: '2025/07/10'},
+  // {id: 14, userId: 2, status: 2, desc: 'Description text test', text: "Task 15", taskType: 0, deadLine: '2025/05/02'},
+  // {id: 15, userId: 1, status: 3, desc: 'Description text test', text: "Task 16", taskType: 1, deadLine: '2025/05/02'},
+  // {id: 16, userId: 2, status: 0, desc: 'Description text test', text: "Task 17", taskType: 0, deadLine: '2025/06/01'},
+  // {id: 17, userId: 2, status: 1, desc: 'Description text test', text: "Task 18", taskType: 1, deadLine: '2025/06/01'},
+  // {id: 18, userId: 1, status: 5, desc: 'Description text test', text: "Task 19", taskType: 1, deadLine: '2025/06/01'},
+  // {id: 19, userId: 2, status: 1, desc: 'Description text test', text: "Task 20", taskType: 0, deadLine: '2025/06/01'},
+  // {id: 20, userId: 2, status: 3, desc: 'Description text test', text: "Task 21", taskType: 2, deadLine: '2025/06/01'},
+  // {id: 21, userId: 2, status: 1, desc: 'Description text test', text: "Task 22", taskType: 1, deadLine: '2025/06/01'},
+  // {id: 22, userId: 1, status: 1, desc: 'Description text test', text: "Task 23", taskType: 0, deadLine: '2025/06/01'},
+  // {id: 23, userId: 1, status: 5, desc: 'Description text test', text: "Task 24", taskType: 1, deadLine: '2025/06/01'},
+  // {id: 24, userId: 2, status: 0, desc: 'Description text test', text: "Task 25", taskType: 2, deadLine: '2025/06/01'},
+  // {id: 25, userId: 2, status: 3, desc: 'Description text test', text: "Task 26", taskType: 0, deadLine: '2025/06/01'},
+  // {id: 26, userId: 1, status: 3, desc: 'Description text test', text: "Task 27", taskType: 2, deadLine: '2025/07/10'},
   {id: 27, userId: 2, status: 1, desc: 'Description text test', text: "Task 28", taskType: 1, deadLine: '2025/07/10'},
   {id: 28, userId: 2, status: 5, desc: 'Description text test', text: "Task 29", taskType: 1, deadLine: '2025/07/10'},
   {id: 29, userId: 1, status: 2, desc: 'Description text test', text: "Task 30", taskType: 2, deadLine: '2025/07/10'},
@@ -255,6 +262,22 @@ function clearFilter(){
   tasks.value = copyTask.value;
   allTasks.value = false;
   changeAll();
+}
+const successNotify = (val, val1) => {
+  $q.notify({
+    type: val1,
+    textColor: 'white',
+    message: val,
+    position: 'top',
+  })
+}
+const errorNotify = (val) => {
+  $q.notify({
+    type: 'negative',
+    textColor: 'white',
+    message: val,
+    position: 'top',
+  })
 }
 onMounted(() => {
   changeAll();

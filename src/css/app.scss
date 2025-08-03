@@ -25,6 +25,7 @@
   overflow-x: auto;
   display: flex;
   justify-content: space-around;
+  padding-bottom: 30px;
   .task_container{
     width: 100%;
     min-width: 220px;
@@ -33,7 +34,7 @@
     .draggable{
       border-radius: 12px;
       min-height: 140px;
-      //background-color: #eae8e8;
+      background-color: #eae8e8;
       padding: 1px;
     }
     .add_task{

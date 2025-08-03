@@ -1,5 +1,12 @@
 <template>
   <div class="task_item" :style="getBorder">
+    <div class="flex flex-wrap items-center">
+      <div class="avatar_task">
+        <img class="img_style" v-if="element?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">
+        <img class="img_style" v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
+      </div>
+      <div class="text-bold">{{element.text}}</div>
+    </div>
     <div class="element_page">
       <div style="display: flex;">
         <q-select class="q_select" color="gray"
@@ -17,9 +24,7 @@
       </div>
     </div>
     <div class="task_text">
-      <div class="text-bold">{{element.text}}</div>
       <div>{{element.desc}}</div>
-      <div>{{element.userId}}</div>
       <div class="bottom_panel">
         <div class="type_class">
           <q-select
@@ -49,7 +54,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
-import { useUserStore } from '../../../../stores/user.js'
+import { useUserStore } from 'stores/user.js'
 
 const userStore = useUserStore()
 const props = defineProps({
@@ -118,6 +123,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.avatar_task{
+  border-radius: 15px;
+  background-color: #1d1d1d;
+  width: 25px;
+  height: 25px;
+  .img_style{
+    border-radius: 15px;
+    height: auto;
+    width: auto;
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
 .color-c{
   border: 1px solid red !important;
 }

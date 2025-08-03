@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useUserStore } from '../../../../stores/user.js'
-import { useQuasar } from 'quasar'
+import { useUserStore } from 'stores/user.js'
 
 const userStore = useUserStore()
 const dialog = ref(false)
@@ -91,25 +90,6 @@ watch(
     }
   },
 )
-const $q = useQuasar()
-function onSubmit () {
-  if (!Task.value.text || !Task.value.desc || !Task.value.deadLine) {
-    $q.notify({
-      color: 'red-5',
-      textColor: 'white',
-      icon: 'warning',
-      message: 'Please fill in all required fields'
-    });
-    return false;
-  }
-
-  $q.notify({
-    color: 'green-4',
-    textColor: 'white',
-    icon: 'cloud_done',
-    message: 'Submitted successfully!'
-  });
-}
 </script>
 
 <template>

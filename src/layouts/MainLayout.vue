@@ -3,8 +3,8 @@
     <q-header style="background-color: #f5f5f5" class="q-ma-sm q-badge--rounded">
       <q-toolbar>
         <q-btn color="black" flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title style="color: #1d1d1d">{{user?.username}}</q-toolbar-title>
         <q-toggle
+          class="q-ml-auto"
           v-model="isDark"
           checked-icon="dark_mode"
           unchecked-icon="light_mode"
@@ -15,7 +15,14 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above>
-      <q-list class="q-py-xl q-px-sm">
+      <q-list class="q-px-sm q-py-md">
+        <q-toolbar-title class="q-mx-sm q-py-sm" style="border-bottom: 1px solid #a6a5a5">
+          <q-avatar class="q-mr-md">
+            <img v-if="user?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">
+            <img v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
+          </q-avatar>
+          <span class="text-black">{{user?.username}}</span>
+        </q-toolbar-title>
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
