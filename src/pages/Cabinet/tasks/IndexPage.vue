@@ -383,32 +383,6 @@ onMounted(() => {
   color: var(--text-soft);
 }
 
-.add_task {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: auto;
-  min-height: 34px;
-  padding: 8px 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px dashed rgba(148, 163, 184, 0.9);
-  background: rgba(255, 255, 255, 0.32);
-  color: var(--text-soft);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  transition: all 0.2s ease;
-}
-
-.add_task:hover {
-  background: rgba(37, 99, 235, 0.06);
-  border-color: rgba(37, 99, 235, 0.45);
-  color: var(--text);
-  transform: translateY(-1px);
-}
-
 .add_task .q-icon {
   color: #2563eb;
 }

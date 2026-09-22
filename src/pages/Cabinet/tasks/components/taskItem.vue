@@ -96,16 +96,16 @@ const bgColor = computed(() => {
   }
 })
 const getBorder = computed(() => {
-  if (!selectedTypeOption.value) return 'border: 1px solid grey'
+  if (!selectedTypeOption.value) return 'box-shadow: 0px 0px 2px 0.1px grey'
   switch (selectedTypeOption.value.id) {
     case 0:
-      return 'border: 1px solid red; box-shadow: 0 0 5px 1px red'
+      return 'box-shadow: 0px 0px 2px 0.1px red'
     case 1:
-      return 'border: 1px solid green; box-shadow: 0 0 5px 1px green'
+      return 'box-shadow: 0px 0px 2px 0.1px green'
     case 2:
-      return 'border: 1px solid grey; box-shadow: 0 0 5px 1px grey'
+      return 'box-shadow: 0px 0px 2px 0.1px grey'
     default:
-      return 'border: 1px solid grey; box-shadow: 0 0 5px 1px grey'
+      return 'box-shadow: 0px 0px 2px 0.1px grey'
   }
 })
 watch(
