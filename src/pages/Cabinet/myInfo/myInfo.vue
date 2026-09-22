@@ -66,11 +66,27 @@ const errorNotify = (val) => {
         <img style="height: auto; width: auto; max-height: 100%; max-width: 100%"
           v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
     </div>
-    <div class="q-pa-sm" style="min-width: 300px">
-      <q-input clearable :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.username" dense="dense" />
-      <q-input clearable type="number" :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.age" dense="dense" />
-      <q-input clearable :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.region" dense="dense" />
-      <q-input clearable :readonly="edit" class="q-my-sm bg-white" outlined v-model="user.profession" dense="dense" />
+    <div class="q-pa-sm info-form" style="min-width: 300px">
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.username" label="Username">
+        <template v-slot:prepend>
+          <q-icon name="person" color="primary" />
+        </template>
+      </q-input>
+      <q-input clearable type="number" :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.age" label="Age">
+        <template v-slot:prepend>
+          <q-icon name="numbers" color="primary" />
+        </template>
+      </q-input>
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.region" label="Region">
+        <template v-slot:prepend>
+          <q-icon name="place" color="primary" />
+        </template>
+      </q-input>
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.profession" label="Profession">
+        <template v-slot:prepend>
+          <q-icon name="work" color="primary" />
+        </template>
+      </q-input>
       <div class="flex justify-between">
         <q-btn @click="edit=!edit" style="width: 48%" unelevated color="orange">edit</q-btn>
         <q-btn @click="saveInfo" :disable="edit" style="width: 48%" unelevated color="positive">save</q-btn>
@@ -81,5 +97,17 @@ const errorNotify = (val) => {
 </template>
 
 <style scoped>
+.info-form {
+  width: min(420px, 100%);
+}
 
+.form-field :deep(.q-field__control) {
+  min-height: 48px;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.9);
+}
+
+body.body--dark .form-field :deep(.q-field__control) {
+  background: rgba(17,28,45,0.86);
+}
 </style>

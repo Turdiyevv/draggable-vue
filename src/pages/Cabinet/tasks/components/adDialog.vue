@@ -107,17 +107,50 @@ watch(
           </div>
           <q-input
             :rules="[ val => val && val.length > 0 || 'Please type something']"
-            :readonly="noEdit" clearable class="q-my-sm bg-white" label="Text" outlined v-model="Task.text" dense="dense" />
+            :readonly="noEdit"
+            clearable
+            filled
+            stack-label
+            class="q-my-sm form-input"
+            label="Task title"
+            v-model="Task.text"
+          >
+            <template v-slot:prepend>
+              <q-icon name="title" color="primary" />
+            </template>
+          </q-input>
           <q-input
             :rules="[ val => val && val.length > 0 || 'Please type something']"
-            :readonly="noEdit" clearable class="q-my-sm bg-white" label="Description" outlined v-model="Task.desc" dense="dense" />
+            :readonly="noEdit"
+            clearable
+            filled
+            stack-label
+            class="q-my-sm form-input"
+            label="Description"
+            v-model="Task.desc"
+            type="textarea"
+            autogrow
+          >
+            <template v-slot:prepend>
+              <q-icon name="notes" color="primary" />
+            </template>
+          </q-input>
           <div class="flex justify-between items-start">
             <div style="max-width: 300px">
               <q-input
                 :rules="[ val => val && val.length > 0 || 'Please type something']"
-                :readonly="noEdit" label="Deadline" filled v-model="Task.deadLine" mask="date">
+                :readonly="noEdit"
+                label="Deadline"
+                filled
+                stack-label
+                v-model="Task.deadLine"
+                mask="date"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="event" color="primary" />
+                </template>
                 <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
+                  <q-icon name="calendar_today" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="Task.deadLine">
                         <div class="row items-center justify-end">
@@ -152,7 +185,17 @@ watch(
 </template>
 
 <style scoped>
->>>.q-my-sm{
-  border-radius: 12px;
+.form-input {
+  border-radius: 14px;
+}
+
+.form-input :deep(.q-field__control) {
+  min-height: 48px;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.9);
+}
+
+body.body--dark .form-input :deep(.q-field__control) {
+  background: rgba(17,28,45,0.86);
 }
 </style>

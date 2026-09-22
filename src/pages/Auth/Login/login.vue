@@ -2,12 +2,33 @@
 <div class="login_form">
   <q-card class="">
     <q-form @submit="handleLogin">
-      <q-input clearable
-        :rules="[ val => val && val.length > 0 || 'Please type something']"
-        standout="bg-white" v-model="username" label="username"/>
-      <q-input clearable
-        :rules="[ val => val && val.length > 0 || 'Please type something']"
-        standout="bg-white" v-model="password" label="password"/>
+      <q-input
+        clearable
+        filled
+        stack-label
+        class="login-field"
+        :rules="[ val => !!val || 'Please type something']"
+        v-model="username"
+        label="Username"
+      >
+        <template v-slot:prepend>
+          <q-icon name="person" color="primary" />
+        </template>
+      </q-input>
+      <q-input
+        clearable
+        filled
+        stack-label
+        type="password"
+        class="login-field"
+        :rules="[ val => !!val || 'Please type something']"
+        v-model="password"
+        label="Password"
+      >
+        <template v-slot:prepend>
+          <q-icon name="lock" color="primary" />
+        </template>
+      </q-input>
       <div class="btn_p">
         <q-btn :loading="loadingBtn" type="submit" color="primary" label="Submit" unelevated/>
       </div>
@@ -53,5 +74,17 @@ const showNotify = () => {
 </script>
 
 <style scoped>
+.login-field {
+  margin-bottom: 12px;
+}
 
+.login-field :deep(.q-field__control) {
+  min-height: 48px;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.9);
+}
+
+body.body--dark .login-field :deep(.q-field__control) {
+  background: rgba(17,28,45,0.86);
+}
 </style>

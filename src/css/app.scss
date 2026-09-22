@@ -1,142 +1,348 @@
 // app global css in SCSS form
-.login_form{
+:root {
+  --app-bg: #f3f6fb;
+  --surface: #ffffff;
+  --surface-soft: #edf3ff;
+  --surface-strong: #e4ebf8;
+  --panel: #f7f9fc;
+  --text: #172033;
+  --text-soft: #58657a;
+  --border: rgba(148, 163, 184, 0.28);
+  --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --board-bg: linear-gradient(180deg, #edf3ff 0%, #f6f9ff 100%);
+  --chip-bg: rgba(37, 99, 235, 0.08);
+  --scroll-track: #edf2f7;
+  --scroll-thumb: #a7b4cf;
+  --card-gradient: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,247,255,0.9));
+  --primary-soft: rgba(37,99,235,0.12);
+  --primary-strong: rgba(37,99,235,0.18);
+}
+
+body.body--dark {
+  --app-bg: #0b1220;
+  --surface: #111c2d;
+  --surface-soft: #16253b;
+  --surface-strong: #1b2c45;
+  --panel: #101a2a;
+  --text: #e6edf8;
+  --text-soft: #a7b5cb;
+  --border: rgba(148, 163, 184, 0.18);
+  --shadow: 0 16px 38px rgba(2, 6, 23, 0.45);
+  --board-bg: linear-gradient(180deg, #101a2d 0%, #0e1729 100%);
+  --chip-bg: rgba(96, 165, 250, 0.12);
+  --scroll-track: #0f172a;
+  --scroll-thumb: #475569;
+  --card-gradient: linear-gradient(180deg, rgba(17,28,45,0.96), rgba(13,21,35,0.95));
+  --primary-soft: rgba(96,165,250,0.12);
+  --primary-strong: rgba(96,165,250,0.18);
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--text);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--scroll-thumb), #7c8fb3);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+html, body,
+.q-layout,
+.q-page,
+.q-card,
+.q-dialog,
+.q-menu,
+.q-drawer,
+.q-item,
+.q-toolbar,
+.q-field,
+.q-input,
+.q-select,
+.q-btn,
+.q-chip {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.q-field__label,
+.q-field__native,
+.q-field__control,
+.q-item__label,
+.q-item__section,
+.q-toolbar-title,
+.q-breadcrumbs,
+.q-chip__content,
+.text-black,
+.text-white {
+  color: var(--text) !important;
+}
+
+body.body--dark .text-black,
+body.body--dark .q-toolbar-title,
+body.body--dark .q-item__label,
+body.body--dark .q-item__section,
+body.body--dark .q-field__label,
+body.body--dark .q-field__native,
+body.body--dark .q-field__control,
+body.body--dark .q-input,
+body.body--dark .q-select,
+body.body--dark .q-card,
+body.body--dark .q-dialog,
+body.body--dark .q-menu,
+body.body--dark .q-drawer {
+  color: var(--text) !important;
+}
+
+body.body--dark .q-field__control,
+body.body--dark .q-menu,
+body.body--dark .q-drawer,
+body.body--dark .q-card,
+body.body--dark .info_page,
+body.body--dark .login_form,
+body.body--dark .task_item,
+body.body--dark .task_label,
+body.body--dark .draggable,
+body.body--dark .add_task {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+.login_form {
   margin: 10px;
-  width: 500px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  .btn_p{
+  width: min(500px, calc(100vw - 32px));
+  background: linear-gradient(145deg, var(--surface), var(--surface-soft));
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+
+  .btn_p {
     display: flex;
-    justify-content: end;
-    margin: 10px 0;
+    justify-content: flex-end;
+    margin: 10px 0 0;
   }
-  .q-card{
-    border: 1px solid #e3e0e0;
+
+  .q-card {
+    border: 1px solid var(--border);
+    background: transparent;
     padding: 20px !important;
-    .q-input{
+    box-shadow: none !important;
+
+    .q-input {
       margin: 10px 0 !important;
     }
   }
 }
-.q-drawer{
-  border-radius: 12px !important;
+
+.q-drawer {
+  border-radius: 18px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
-.container_task_page{
+
+.q-header {
+  box-shadow: none !important;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px);
+}
+
+body.body--dark .q-header {
+  background: rgba(11, 18, 32, 0.82) !important;
+}
+
+.container_task_page {
   overflow-x: auto;
   display: flex;
   justify-content: space-around;
-  padding-bottom: 30px;
-  .task_container{
+  padding: 12px 8px 30px;
+  gap: 18px;
+  align-items: flex-start;
+
+  .task_container {
     width: 100%;
-    min-width: 220px;
-    margin: 10px;
-    border-radius: 12px;
-    .draggable{
-      border-radius: 12px;
-      min-height: 140px;
-      background-color: #eae8e8;
-      padding: 1px;
+    min-width: 260px;
+    margin: 0;
+    border-radius: 20px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+
+    .draggable {
+      border-radius: 18px;
+      min-height: 170px;
+      background: var(--board-bg);
+      border: 1px solid var(--border);
+      padding: 10px 8px 8px;
+      transition: background 0.2s ease, transform 0.2s ease;
     }
-    .add_task{
-      background-color: #e3e0e0;
-      padding: 4px;
-      border-radius: 12px;
-      margin: 0 6px;
+
+    .add_task {
+      background: linear-gradient(135deg, var(--primary-soft), rgba(255,255,255,0.25));
+      border: 1px dashed rgba(59, 130, 246, 0.28);
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin: 10px 0 0;
+      color: var(--text);
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
     }
-    .task_label{
-      background-color: white;
+
+    .add_task:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.08);
+    }
+
+    .task_label {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(237,243,255,0.9));
+      color: var(--text);
       width: 100%;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid #e3e0e0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
       text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.06);
+      margin-bottom: 8px;
     }
-    .task_item{
-      border-radius: 12px;
-      border: 1px solid #e3e0e0;
-      padding: 5px;
-      margin: 5px;
-      background-color: white;
+
+    .task_item {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 12px 10px 10px;
+      margin: 8px 0;
+      background: var(--card-gradient);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .task_item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.08);
     }
   }
 }
-.task_item:hover{
-  .element_page{
-    .action_panel{
+
+.task_item:hover {
+  .element_page {
+    .action_panel {
       display: flex;
-      justify-content: end;
-      background-color: white;
+      justify-content: flex-end;
+      background: transparent;
     }
   }
 }
-.element_page{
+
+.element_page {
   height: fit-content;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  .action_panel{
+  align-items: center;
+  margin-top: 8px;
+
+  .action_panel {
     display: none;
   }
-  .edit_c{
-    width: 23px;
-    height: 23px;
-    border: 1px solid #e3e0e0;
-    padding: 1px;
-    margin: 0 0 0 2px;
-    border-radius: 4px;
+
+  .edit_c {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    padding: 4px;
+    margin-left: 6px;
+    border-radius: 8px;
+    background: var(--surface-soft);
   }
+
   .q_select {
     max-width: 100px;
-    height: 26px;
-    min-height: 26px;
-    font-size: 10px;
+    height: 30px;
+    min-height: 30px;
+    font-size: 11px;
     margin: 0 0 0 2px;
-    .q-field__control, .q-field__append {
-      padding: 0 4px;
-      border-radius: 4px !important;
-      height: 26px !important;
-      min-height: 26px !important;
+
+    .q-field__control,
+    .q-field__append {
+      padding: 0 6px;
+      border-radius: 8px !important;
+      height: 30px !important;
+      min-height: 30px !important;
+      background: var(--surface-soft) !important;
     }
+
     .q-field__native,
     .q-placeholder,
     .q-field__label {
       padding: 0;
       min-height: fit-content;
-      height: 25px !important;
+      height: 28px !important;
       font-size: 12px;
+      color: var(--text) !important;
     }
   }
 }
-.task_text{
-  .bottom_panel{
+
+.task_text {
+  .bottom_panel {
     display: flex;
     align-content: center;
     justify-content: space-between;
-    padding: 0 2px;
+    padding: 6px 2px 0;
+    gap: 10px;
+    color: var(--text-soft);
   }
-  .type_class{
+
+  .type_class {
     .q_select {
-      max-width: 100px;
-      height: 26px;
-      min-height: 26px;
+      max-width: 110px;
+      height: 30px;
+      min-height: 30px;
       font-size: 10px;
       margin: 0 0 0 2px;
-      .q-field__control, .q-field__append {
-        padding: 0 2px 0 8px;
+
+      .q-field__control,
+      .q-field__append {
+        padding: 0 6px 0 10px;
         border-radius: 8px !important;
-        height: 26px !important;
-        min-height: 26px !important;
+        height: 30px !important;
+        min-height: 30px !important;
       }
+
       .q-field__native,
       .q-placeholder,
       .q-field__label {
         color: white;
         padding: 0;
         min-height: fit-content;
-        height: 25px !important;
+        height: 28px !important;
         font-size: 12px;
       }
-      .q-icon{
+
+      .q-icon {
         padding: 0;
         width: 12px;
         color: white !important;
@@ -144,96 +350,247 @@
     }
   }
 }
-.pagination{
+
+.pagination {
   display: flex;
   justify-content: center;
+  padding-top: 10px;
 }
-.q-list{
-  background-color: #f5f5f5;
+
+.q-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
   margin: 5px;
   border-radius: 12px;
 }
-.info_page{
-  border-radius: 12px;
-  background-color: #f5f5f5;
-  .pic_c{
+
+.info_page {
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--surface), var(--surface-soft));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+
+  .pic_c {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
-    border-radius: 12px;
+    background: linear-gradient(135deg, #eef4ff, #f5f0ff);
+    border: 1px solid var(--border);
+    border-radius: 18px;
     width: 300px;
     height: 400px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
-  .q-field{
+
+  .q-field {
     border-radius: 12px;
   }
 }
-.q-dialog{
+
+body.body--dark .info_page .pic_c {
+  background: linear-gradient(135deg, #17253d, #192430);
+}
+
+.q-dialog {
   .q-dialog__backdrop {
-      backdrop-filter: blur(4px) saturate(150%);
-    }
-  .q-card{
+    backdrop-filter: blur(4px) saturate(150%);
+  }
+
+  .q-card {
     width: 100%;
+    border-radius: 18px !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border);
   }
 }
 
 //defaults
-.q-card, .q-btn, .q-field__control {
+.q-card,
+.q-btn,
+.q-field__control {
   border-radius: 12px !important;
   box-shadow: none !important;
 }
-.q-field--labeled .q-field__native{
-  color: #000 !important;
+
+.q-field--labeled .q-field__native {
+  color: var(--text) !important;
 }
-.q-btn{
+
+.q-btn {
   text-transform: none !important;
 }
-.q-router-link--exact-active{
-  background-color: #1976d2;
+
+.q-router-link--exact-active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white !important;
-  .q-item__label{
-    color: antiquewhite;
+
+  .q-item__label {
+    color: white;
   }
 }
 
-///dark-light
 body.body--dark .q-router-link--exact-active {
-  background-color: #a6a5a5;
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
 }
-body.body--dark .q-item__label{
-  color: black;
+
+body.body--dark .q-item__label {
+  color: var(--text);
 }
-body.body--dark .pic_c{
-  color: black;
+
+body.body--dark .task_label {
+  background: linear-gradient(135deg, rgba(17,28,45,0.92), rgba(22,37,59,0.95));
 }
-body.body--dark .q-field__native{
-  color: black;
+
+body.body--dark .task_item,
+body.body--dark .q-field__native,
+body.body--dark .q-field__inner,
+body.body--dark .pic_c {
+  color: var(--text);
 }
-body.body--dark .q-field__inner{
-  color: black;
+
+body.body--dark .q-field__control {
+  background: var(--surface-soft) !important;
+  color: var(--text) !important;
 }
-body.body--dark .task_label{
-  color: black;
+
+body.body--dark .q-field__native,
+body.body--dark .q-placeholder,
+body.body--dark .q-field__label {
+  color: var(--text) !important;
 }
-body.body--dark .task_item{
-  color: black;
+
+body.body--dark .q-dialog .q-card {
+  box-shadow: var(--shadow) !important;
 }
-body.body--dark .add_task{
-  color: black;
+
+body.body--dark .task_item {
+  background: var(--card-gradient);
 }
-body.body--dark .q-item{
-  color: black;
+
+body.body--dark .add_task {
+  background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(15,23,42,0.3));
 }
-body.body--dark .q-item{
-  color: black;
+
+body.body--dark .q-card,
+body.body--dark .q-menu,
+body.body--dark .q-drawer,
+body.body--dark .q-layout,
+body.body--dark .q-page {
+  background: var(--app-bg);
 }
-body.body--dark .q-field--dark:not(.q-field--highlighted) .q-field__label, .q-field--dark .q-field__marginal, .q-field--dark .q-field__bottom{
-  color: black;
+
+.q-field {
+  --q-field-bg: rgba(255,255,255,0.9);
 }
-body.body--dark .q-field--filled.q-field--dark .q-field__control{
-  background-color: white;
+
+.q-field--outlined .q-field__control,
+.q-field--filled .q-field__control {
+  background: var(--q-field-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  min-height: 52px !important;
+  color: var(--text) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
-body.body--dark .q-field__focusable-action{
-  color: orange;
+
+.q-field--outlined .q-field__control:hover,
+.q-field--filled .q-field__control:hover {
+  border-color: rgba(59, 130, 246, 0.45) !important;
 }
+
+.q-field--focused .q-field__control {
+  border-color: rgba(37, 99, 235, 0.7) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.q-field__native,
+.q-field__label,
+.q-placeholder,
+.q-input .q-field__native,
+.q-select .q-field__native {
+  color: var(--text) !important;
+}
+
+.q-field__label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.q-field--focused .q-field__label,
+.q-field--float .q-field__label,
+.q-field--focused .q-field__native,
+.q-field--float .q-field__native {
+  color: #2563eb !important;
+}
+
+body.body--dark .q-field {
+  --q-field-bg: rgba(17, 28, 45, 0.86);
+}
+
+body.body--dark .q-field--outlined .q-field__control,
+body.body--dark .q-field--filled .q-field__control {
+  background: var(--q-field-bg) !important;
+  border-color: var(--border) !important;
+}
+
+body.body--dark .q-field--focused .q-field__control {
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+}
+
+.q-input .q-field__control,
+.q-select .q-field__control,
+.q-date .q-field__control {
+  min-height: 52px;
+}
+
+.q-input .q-field__label,
+.q-select .q-field__label,
+.q-date .q-field__label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.q-form .q-input,
+.q-form .q-select,
+.info_page .q-input {
+  margin-bottom: 14px;
+}
+
+.q-dialog .q-input,
+.q-dialog .q-select {
+  margin-bottom: 12px;
+}
+
+.q-field__prepend,
+.q-field__append {
+  color: var(--text-soft) !important;
+}
+
+.q-field__bottom {
+  color: var(--text-soft) !important;
+}
+
+.q-field--error .q-field__control {
+  border-color: rgba(239, 68, 68, 0.8) !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
+  background: rgba(254, 242, 242, 0.9) !important;
+}
+
+body.body--dark .q-field--error .q-field__control {
+  background: rgba(52, 18, 18, 0.6) !important;
+}
+
+.q-field--error .q-field__label,
+.q-field--error .q-field__messages {
+  color: #ef4444 !important;
+}
+
+.q-field--error .q-icon {
+  color: #ef4444 !important;
+}
+
+.q-field__control:focus-within {
+  transform: translateY(-1px);
+}
+

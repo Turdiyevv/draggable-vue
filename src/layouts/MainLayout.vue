@@ -1,8 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header style="background-color: #f5f5f5" class="q-ma-sm q-badge--rounded">
+    <q-header class="app-header q-ma-sm q-badge--rounded">
       <q-toolbar>
-        <q-btn color="black" flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn color="primary" flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-toggle
           class="q-ml-auto"
           v-model="isDark"
@@ -10,18 +10,18 @@
           unchecked-icon="light_mode"
           @update:model-value="toggleDark"
         />
-        <q-btn @click="logOut" size="sm" outline unelevated color="red" icon="logout"></q-btn>
+        <q-btn @click="logOut" size="sm" outline unelevated color="negative" icon="logout"></q-btn>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above>
       <q-list class="q-px-sm q-py-md">
-        <q-toolbar-title class="q-mx-sm q-py-sm" style="border-bottom: 1px solid #a6a5a5">
+        <q-toolbar-title class="user-header q-mx-sm q-py-sm">
           <q-avatar class="q-mr-md">
             <img v-if="user?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">
             <img v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
           </q-avatar>
-          <span class="text-black">{{user?.username}}</span>
+          <span>{{ user?.username }}</span>
         </q-toolbar-title>
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
@@ -79,3 +79,18 @@ async function logOut() {
 }
 const user = computed(() => {return userStore.user});
 </script>
+
+<style scoped>
+.app-header {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+</style>
