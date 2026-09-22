@@ -109,7 +109,7 @@ watch(
             :rules="[ val => val && val.length > 0 || 'Please type something']"
             :readonly="noEdit"
             clearable
-            filled
+            outlined
             stack-label
             class="q-my-sm form-input"
             label="Task title"
@@ -123,9 +123,9 @@ watch(
             :rules="[ val => val && val.length > 0 || 'Please type something']"
             :readonly="noEdit"
             clearable
-            filled
+            outlined
             stack-label
-            class="q-my-sm form-input"
+            class="q-my-sm form-input description-field"
             label="Description"
             v-model="Task.desc"
             type="textarea"
@@ -141,8 +141,9 @@ watch(
                 :rules="[ val => val && val.length > 0 || 'Please type something']"
                 :readonly="noEdit"
                 label="Deadline"
-                filled
+                outlined
                 stack-label
+                class="form-input"
                 v-model="Task.deadLine"
                 mask="date"
               >
@@ -186,16 +187,50 @@ watch(
 
 <style scoped>
 .form-input {
-  border-radius: 14px;
+  margin: 0 0 20px !important;
+  padding-bottom: 0 !important;
 }
 
 .form-input :deep(.q-field__control) {
-  min-height: 48px;
+  min-height: 52px !important;
   border-radius: 12px !important;
-  background: rgba(255,255,255,0.9);
+  background: var(--surface-soft) !important;
+  box-shadow: none !important;
 }
 
-body.body--dark .form-input :deep(.q-field__control) {
-  background: rgba(17,28,45,0.86);
+.form-input :deep(.q-field__control::before),
+.form-input :deep(.q-field__control::after) {
+  display: none !important;
+}
+
+.form-input :deep(.q-field__bottom) {
+  position: static !important;
+  display: block !important;
+  min-height: 18px !important;
+  margin-top: 0 !important;
+  padding: 0 8px !important;
+  line-height: 16px !important;
+}
+
+.form-input :deep(.q-field__messages) {
+  line-height: 16px !important;
+}
+
+.description-field :deep(.q-field__control) {
+  align-items: center;
+}
+
+.description-field :deep(.q-field__prepend),
+.description-field :deep(.q-field__append),
+.description-field :deep(.q-field__marginal) {
+  align-self: center;
+  height: 24px !important;
+  min-height: 24px !important;
+  display: flex;
+  align-items: center;
+}
+
+.description-field :deep(.q-field__native) {
+  line-height: 20px;
 }
 </style>

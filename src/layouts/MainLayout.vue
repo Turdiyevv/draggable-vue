@@ -14,8 +14,8 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above>
-      <q-list class="q-px-sm q-py-md">
+    <q-drawer class="app-drawer" v-model="leftDrawerOpen" show-if-above>
+      <q-list class="main-nav-list q-px-sm q-py-md">
         <q-toolbar-title class="user-header q-mx-sm q-py-sm">
           <q-avatar class="q-mr-md">
             <img v-if="user?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">

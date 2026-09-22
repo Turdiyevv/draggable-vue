@@ -4,7 +4,7 @@
     <q-form @submit="handleLogin">
       <q-input
         clearable
-        filled
+        outlined
         stack-label
         class="login-field"
         :rules="[ val => !!val || 'Please type something']"
@@ -17,7 +17,7 @@
       </q-input>
       <q-input
         clearable
-        filled
+        outlined
         stack-label
         type="password"
         class="login-field"
@@ -30,7 +30,7 @@
         </template>
       </q-input>
       <div class="btn_p">
-        <q-btn :loading="loadingBtn" type="submit" color="primary" label="Submit" unelevated/>
+        <q-btn class="login-submit" :loading="loadingBtn" type="submit" color="primary" text-color="white" label="Submit" unelevated/>
       </div>
     </q-form>
   </q-card>
@@ -75,7 +75,7 @@ const showNotify = () => {
 
 <style scoped>
 .login-field {
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
 .login-field :deep(.q-field__control) {
@@ -86,5 +86,22 @@ const showNotify = () => {
 
 body.body--dark .login-field :deep(.q-field__control) {
   background: rgba(17,28,45,0.86);
+}
+
+.login-field :deep(.q-field__bottom) {
+  min-height: 18px !important;
+  padding: 2px 8px 0 !important;
+  color: var(--text-soft) !important;
+}
+
+.login-field :deep(.q-field__messages) {
+  color: #ef4444 !important;
+  opacity: 1 !important;
+  line-height: 16px;
+}
+
+.login-submit,
+.login-submit :deep(.q-btn__content) {
+  color: #ffffff !important;
 }
 </style>

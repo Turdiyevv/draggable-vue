@@ -9,13 +9,14 @@
     </div>
     <div class="element_page">
       <div style="display: flex;">
-        <q-select class="q_select" color="gray"
+        <q-select class="q_select task-status-select"
+          popup-content-class="task-select-menu"
           :options="status"
           option-value="id"
           option-label="text"
           v-model="selectedOption"
           @update:model-value="(val) => emitChange(val.id)"
-          filled dense
+          outlined dense
         />
       </div>
       <div class="action_panel">
@@ -28,7 +29,8 @@
       <div class="bottom_panel">
         <div class="type_class">
           <q-select
-            class="q_select"
+            class="q_select task-type-select"
+            popup-content-class="task-select-menu"
             :bg-color="bgColor"
             :options="type"
             option-value="id"
@@ -54,9 +56,6 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
-import { useUserStore } from 'stores/user.js'
-
-const userStore = useUserStore()
 const props = defineProps({
   element: Object,
   status: Array,
@@ -136,20 +135,87 @@ onMounted(() => {
     max-width: 100%;
   }
 }
-.color-c{
-  border: 1px solid red !important;
+.task-status-select :deep(.q-field__control) {
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 8px 0 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-soft) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
 }
-.q_bg_select0{
-  .q-field__control{
-    background-color: red !important;
-    color: white !important;
-  }
+
+.task-status-select :deep(.q-field__native) {
+  min-height: 0 !important;
+  height: 20px !important;
+  padding: 0 !important;
+  line-height: 20px;
+  align-items: center;
 }
-.q_type_select{
-  >>>.q-field__native,
-      >>>.q-placeholder,
-      >>>.q-field__label{
-    color: white !important;
-  }
+
+.task-status-select :deep(.q-field__append),
+.task-status-select :deep(.q-field__marginal),
+.task-status-select :deep(.q-anchor--skip) {
+  height: 20px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
+  background: inherit !important;
+  color: inherit !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  align-items: center;
+  display: flex;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.task-status-select :deep(.q-field__append .q-icon) {
+  color: inherit !important;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.task-type-select :deep(.q-field__control) {
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 8px 0 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.task-type-select :deep(.q-field__native) {
+  min-height: 0 !important;
+  height: 20px !important;
+  padding: 0 !important;
+  line-height: 20px;
+  align-items: center;
+}
+
+.task-type-select :deep(.q-field__append),
+.task-type-select :deep(.q-field__marginal),
+.task-type-select :deep(.q-anchor--skip) {
+  height: 20px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  align-items: center;
+  display: flex;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.task-type-select :deep(.q-field__append .q-icon) {
+  color: inherit !important;
+  opacity: 0.8;
+  font-size: 14px;
 }
 </style>

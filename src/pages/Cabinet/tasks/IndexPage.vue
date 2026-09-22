@@ -1,7 +1,7 @@
 <template>
-  <q-page style="min-height: 100%">
-      <div class="q-px-md flex">
-        <q-btn style="width: 200px; height: 55px; margin: 0 10px 0 0" outline unelevated
+  <q-page class="task-page">
+      <div class="task-toolbar q-px-md">
+        <q-btn class="filter-btn" outline unelevated
                :label="[0, 1, 2].includes(typeFilter) ? getType(typeFilter) : 'Select type'">
           <q-menu auto-close transition-show="scale" transition-hide="scale">
             <q-list style="width: 100px">
@@ -11,7 +11,7 @@
             </q-list>
           </q-menu>
         </q-btn>
-        <q-input readonly label="Date filter" style="width: 200px" filled v-model="deadLineFilter" mask="date">
+        <q-input readonly :label="deadLineFilter ? '' : 'Date filter'" class="date-filter" outlined dense v-model="deadLineFilter" mask="date">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -24,11 +24,8 @@
             </q-icon>
           </template>
         </q-input>
-        <q-checkbox v-model="allTasks" @update:model-value="changeAll" label="All tasks" class="q-ml-md"/>
-        <q-btn
-          style="height: 55px; margin: 0 0 0 auto; color: red"
-          unelevated @click="clearFilter"
-        >Clear filter</q-btn>
+        <q-checkbox v-model="allTasks" @update:model-value="changeAll" label="All tasks" class="all-tasks-check"/>
+        <q-btn class="clear-filter-btn" flat @click="clearFilter">Clear filter</q-btn>
       </div>
     <div class="container_task_page">
 
@@ -54,9 +51,9 @@
             />
           </template>
         </draggable>
-            <div class="add_task flex align-center cursor-pointer" @click="addOpen(x.id)">
-              <q-icon name="add" color="red" size="sm"/>
-              <div class="flex justify-center q-mx-auto">add task</div>
+            <div class="add_task" @click="addOpen(x.id)">
+              <q-icon name="add" size="16px"/>
+              <span>Add task</span>
             </div>
       </div>
     </div>
@@ -283,3 +280,136 @@ onMounted(() => {
   changeAll();
 })
 </script>
+
+<style scoped>
+.task-page {
+  min-height: 100%;
+  padding: 8px 0 24px;
+}
+
+.task-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.filter-btn,
+.clear-filter-btn {
+  height: 42px;
+  min-height: 42px;
+  border-radius: 12px !important;
+}
+
+.filter-btn {
+  width: 170px;
+  min-width: 170px;
+}
+
+.date-filter {
+  width: 180px;
+  min-width: 180px;
+  height: 42px;
+  min-height: 42px;
+}
+
+.date-filter :deep(.q-field__control) {
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  background: var(--surface-soft) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+
+.date-filter :deep(.q-field__inner),
+.date-filter :deep(.q-field__control-container) {
+  height: 100% !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+.date-filter :deep(.q-field__native) {
+  min-height: 0 !important;
+  height: 24px !important;
+  padding: 0 !important;
+  align-self: center;
+  color: var(--text) !important;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.date-filter :deep(.q-field__label) {
+  color: var(--text-soft) !important;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.date-filter :deep(.q-field__append),
+.date-filter :deep(.q-field__marginal) {
+  height: 24px !important;
+  min-height: 24px !important;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  padding: 0 !important;
+  color: var(--text-soft) !important;
+}
+
+.date-filter :deep(.q-field__append .q-icon) {
+  font-size: 18px;
+}
+
+.date-filter :deep(.q-field--focused .q-field__control),
+.date-filter:focus-within :deep(.q-field__control) {
+  border-color: rgba(37, 99, 235, 0.65) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+.all-tasks-check {
+  margin-left: 2px;
+}
+
+.clear-filter-btn {
+  margin-left: auto;
+  color: var(--text-soft);
+}
+
+.add_task {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-height: 34px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba(148, 163, 184, 0.9);
+  background: rgba(255, 255, 255, 0.32);
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+.add_task:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.45);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.add_task .q-icon {
+  color: #2563eb;
+}
+</style>

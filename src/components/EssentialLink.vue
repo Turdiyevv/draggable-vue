@@ -1,6 +1,6 @@
 <template>
-  <q-item clickable :to="props.link"
-          class="q-my-sm q-badge--rounded">
+    <q-item clickable :to="props.link"
+      class="main-nav-item q-my-sm q-badge--rounded">
     <q-item-section v-if="props.icon" avatar>
       <q-icon :name="props.icon" />
     </q-item-section>
