@@ -1,45 +1,40 @@
 <template>
   <div class="task_item" :style="getBorder">
-    <div class="flex flex-wrap items-center">
+    <div class="task-header">
       <div class="avatar_task">
         <img class="img_style" v-if="element?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">
         <img class="img_style" v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
       </div>
-      <div class="text-bold">{{element.text}}</div>
-    </div>
-    <div class="element_page">
-      <div style="display: flex;">
-        <q-select class="q_select task-status-select"
-          popup-content-class="task-select-menu"
-          :options="status"
-          option-value="id"
-          option-label="text"
-          v-model="selectedOption"
-          @update:model-value="(val) => emitChange(val.id)"
-          outlined dense
-        />
-      </div>
-      <div class="action_panel">
-        <q-icon @click="editOpen" class="edit_c cursor-pointer" color="orange" name="edit"></q-icon>
-        <q-icon @click="deleteFunction" class="edit_c cursor-pointer" color="red" name="delete"></q-icon>
-      </div>
+      <div class="task-title text-bold">{{ element.text?.slice(0, 5) }}</div>
+      <q-select class="q_select task-status-select"
+        popup-content-class="task-select-menu"
+        :options="status"
+        option-value="id"
+        option-label="text"
+        v-model="selectedOption"
+        @update:model-value="(val) => emitChange(val.id)"
+        outlined dense
+      />
+      <q-select
+        class="q_select task-type-select"
+        popup-content-class="task-select-menu"
+        :style="{ '--type-color': typeColor }"
+        :options="type"
+        option-value="id"
+        option-label="text"
+          emit-value
+          map-options
+          v-model="selectedTypeId"
+        outlined dense
+      />
     </div>
     <div class="task_text">
       <div>{{element.desc}}</div>
       <div class="bottom_panel">
-        <div class="type_class">
-          <q-select
-            class="q_select task-type-select"
-            popup-content-class="task-select-menu"
-            :bg-color="bgColor"
-            :options="type"
-            option-value="id"
-            option-label="text"
-            v-model="selectedTypeOption"
-            filled dense
-          />
+        <div class="action_panel">
+          <q-icon @click="editOpen" class="edit_c cursor-pointer" color="orange" name="description"></q-icon>
+          <q-icon @click="deleteFunction" class="edit_c cursor-pointer" color="red" name="delete"></q-icon>
         </div>
-<!--            @update:model-value="(val) => emitChange(val.id)"-->
         <div>{{element.deadLine}}</div>
       </div>
     </div>
@@ -77,24 +72,22 @@ function upsertTask(data) {
 }
 
 const selectedOption = ref(null);
-const selectedTypeOption = ref(null);
-
-function emitChange(id) {
-  emit('changeStatus', { statusId: id, element: props.element });
-}
-const bgColor = computed(() => {
-  if (!selectedTypeOption.value) return 'grey'
-  switch (selectedTypeOption.value.id) {
+const selectedTypeId = ref(null);
+const selectedTypeOption = computed(() => props.type.find(item => item.id === selectedTypeId.value));
+const typeColor = computed(() => {
+  switch (selectedTypeOption.value?.id) {
     case 0:
       return 'red'
     case 1:
       return 'green'
-    case 2:
-      return 'grey'
     default:
       return 'grey'
   }
 })
+
+function emitChange(id) {
+  emit('changeStatus', { statusId: id, element: props.element });
+}
 const getBorder = computed(() => {
   if (!selectedTypeOption.value) return 'box-shadow: 0px 0px 2px 0.1px grey'
   switch (selectedTypeOption.value.id) {
@@ -109,19 +102,59 @@ const getBorder = computed(() => {
   }
 })
 watch(
-  () => props.element.status,
-  (newVal) => {
+  [() => props.element.status, () => props.status],
+  ([newVal]) => {
     selectedOption.value = props.status.find(s => s.id === newVal);
+  }
+);
+watch(
+  [() => props.element.taskType, () => props.type],
+  ([newVal]) => {
+    selectedTypeId.value = newVal;
   }
 );
 onMounted(() => {
   selectedOption.value = props.status.find(s => s.id === props.element.status);
-  selectedTypeOption.value = props.type.find(s => s.id === props.element.taskType);
+  selectedTypeId.value = props.element.taskType;
 });
 
 </script>
 
 <style scoped>
+.task-status-select {
+  margin-left: 0 !important;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.task-title {
+  flex: 0 1 5ch;
+  min-width: 0;
+  max-width: 5ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-header .task-status-select,
+.task-header .task-type-select {
+  width: 86px;
+  max-width: 86px;
+  flex: 0 0 86px;
+  min-width: 0;
+}
+
+.task-header .task-type-select {
+  width: max-content;
+  max-width: max-content;
+  flex: 0 0 auto;
+}
+
 .avatar_task{
   border-radius: 15px;
   background-color: #1d1d1d;
@@ -135,30 +168,60 @@ onMounted(() => {
     max-width: 100%;
   }
 }
-.task-status-select :deep(.q-field__control) {
+.task-status-select :deep(.q-field__control),
+.task-type-select :deep(.q-field__control) {
   min-height: 30px !important;
   height: 30px !important;
-  padding: 0 8px 0 10px !important;
+  padding: 0 !important;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--surface-soft) !important;
-  border: 1px solid var(--border) !important;
+  gap: 0;
+  background: transparent !important;
+  border: 0 !important;
   border-radius: 8px !important;
   box-shadow: none !important;
 }
 
-.task-status-select :deep(.q-field__native) {
+.task-status-select :deep(.q-field__control.relative-position.row.no-wrap),
+.task-type-select :deep(.q-field__control.relative-position.row.no-wrap) {
+  align-items: center !important;
+}
+
+.task-status-select :deep(.q-field__control::before),
+.task-status-select :deep(.q-field__control::after),
+.task-type-select :deep(.q-field__control::before),
+.task-type-select :deep(.q-field__control::after) {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.task-status-select :deep(.q-field__native),
+.task-type-select :deep(.q-field__native) {
   min-height: 0 !important;
   height: 20px !important;
   padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
   line-height: 20px;
-  align-items: center;
+}
+
+.task-type-select :deep(.q-field__native),
+.task-type-select :deep(.q-placeholder) {
+  color: var(--type-color) !important;
+}
+
+.task-type-select :deep(.q-field__native) {
+  width: auto;
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
 .task-status-select :deep(.q-field__append),
 .task-status-select :deep(.q-field__marginal),
-.task-status-select :deep(.q-anchor--skip) {
+.task-status-select :deep(.q-anchor--skip),
+.task-type-select :deep(.q-field__append),
+.task-type-select :deep(.q-field__marginal),
+.task-type-select :deep(.q-anchor--skip) {
   height: 20px !important;
   min-height: 20px !important;
   max-height: 20px !important;
@@ -167,55 +230,28 @@ onMounted(() => {
   box-shadow: none !important;
   border-radius: 0 !important;
   align-items: center;
+  justify-content: center;
   display: flex;
   padding: 0 !important;
   margin: 0 !important;
 }
 
-.task-status-select :deep(.q-field__append .q-icon) {
-  color: inherit !important;
-  opacity: 0.8;
-  font-size: 14px;
-}
-
-.task-type-select :deep(.q-field__control) {
-  min-height: 30px !important;
-  height: 30px !important;
-  padding: 0 8px 0 10px !important;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-}
-
-.task-type-select :deep(.q-field__native) {
-  min-height: 0 !important;
-  height: 20px !important;
-  padding: 0 !important;
-  line-height: 20px;
-  align-items: center;
-}
-
-.task-type-select :deep(.q-field__append),
-.task-type-select :deep(.q-field__marginal),
-.task-type-select :deep(.q-anchor--skip) {
-  height: 20px !important;
-  min-height: 20px !important;
-  max-height: 20px !important;
-  background: transparent !important;
-  color: inherit !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  align-items: center;
-  display: flex;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
+.task-status-select :deep(.q-field__append .q-icon),
 .task-type-select :deep(.q-field__append .q-icon) {
   color: inherit !important;
   opacity: 0.8;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  line-height: 18px;
+}
+
+.task-type-select :deep(.q-field__append .q-icon) {
+  color: var(--type-color) !important;
 }
 </style>

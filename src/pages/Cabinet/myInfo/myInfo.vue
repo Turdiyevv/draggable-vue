@@ -2,9 +2,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from 'stores/user.js'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'src/i18n/index.js'
 
 const $q = useQuasar();
 const userStore = useUserStore()
+const { t } = useI18n()
 const user = ref({
   username: '',
   age: '',
@@ -43,7 +45,7 @@ const successNotify = () => {
   $q.notify({
     type: 'positive',
     textColor: 'white',
-    message: 'Changed info !',
+    message: t('profile.changed'),
     position: 'top',
   })
 }
@@ -59,37 +61,37 @@ const errorNotify = (val) => {
 
 <template>
 <q-item class="info_page">
-  <div class="q-pa-sm flex flex-wrap">
+  <div class="info-content">
     <div class="pic_c">
         <img style="height: auto; width: auto; max-height: 100%; max-width: 100%"
           v-if="user?.userId === 1" src="https://cdn.quasar.dev/img/boy-avatar.png" alt="">
         <img style="height: auto; width: auto; max-height: 100%; max-width: 100%"
           v-else src="https://cdn.quasar.dev/img/avatar4.jpg" alt="">
     </div>
-    <div class="q-pa-sm info-form" style="min-width: 300px">
-      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.username" label="Username">
+    <div class="info-form">
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.username" :label="t('profile.username')">
         <template v-slot:prepend>
           <q-icon name="person" color="primary" />
         </template>
       </q-input>
-      <q-input clearable type="number" :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.age" label="Age">
+      <q-input clearable type="number" :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.age" :label="t('profile.age')">
         <template v-slot:prepend>
           <q-icon name="numbers" color="primary" />
         </template>
       </q-input>
-      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.region" label="Region">
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.region" :label="t('profile.region')">
         <template v-slot:prepend>
           <q-icon name="place" color="primary" />
         </template>
       </q-input>
-      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.profession" label="Profession">
+      <q-input clearable :readonly="edit" class="q-my-sm form-field" filled stack-label v-model="user.profession" :label="t('profile.profession')">
         <template v-slot:prepend>
           <q-icon name="work" color="primary" />
         </template>
       </q-input>
       <div class="flex justify-between">
-        <q-btn @click="edit=!edit" style="width: 48%" unelevated color="orange">edit</q-btn>
-        <q-btn @click="saveInfo" :disable="edit" style="width: 48%" unelevated color="positive">save</q-btn>
+        <q-btn @click="edit=!edit" style="width: 48%" unelevated color="orange">{{ t('profile.edit') }}</q-btn>
+        <q-btn @click="saveInfo" :disable="edit" style="width: 48%" unelevated color="positive">{{ t('profile.save') }}</q-btn>
       </div>
     </div>
   </div>
@@ -97,8 +99,26 @@ const errorNotify = (val) => {
 </template>
 
 <style scoped>
+.info-content {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 420px);
+  align-items: start;
+  gap: 20px;
+  width: 100%;
+  padding: 8px;
+}
+
+.info-content .pic_c {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  min-height: 240px;
+}
+
 .info-form {
-  width: min(420px, 100%);
+  width: 100%;
+  min-width: 0;
 }
 
 .form-field :deep(.q-field__control) {
@@ -109,5 +129,18 @@ const errorNotify = (val) => {
 
 body.body--dark .form-field :deep(.q-field__control) {
   background: rgba(17,28,45,0.86);
+}
+
+@media (max-width: 700px) {
+  .info-content {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .info-content .pic_c,
+  .info-form {
+    width: 100%;
+    max-width: 420px;
+  }
 }
 </style>

@@ -2,7 +2,7 @@
   <q-page class="task-page">
       <div class="task-toolbar q-px-md">
         <q-btn class="filter-btn" outline unelevated
-               :label="[0, 1, 2].includes(typeFilter) ? getType(typeFilter) : 'Select type'">
+               :label="[0, 1, 2].includes(typeFilter) ? getType(typeFilter) : t('tasks.selectType')">
           <q-menu auto-close transition-show="scale" transition-hide="scale">
             <q-list style="width: 100px">
               <q-item @click="selectTask(x.id)" v-for="x in type" :key="x.id" clickable>
@@ -11,27 +11,33 @@
             </q-list>
           </q-menu>
         </q-btn>
-        <q-input readonly :label="deadLineFilter ? '' : 'Date filter'" class="date-filter" outlined dense v-model="deadLineFilter" mask="date">
+        <q-input readonly :label="deadLineFilter ? '' : t('tasks.dateFilter')" class="date-filter" outlined dense v-model="deadLineFilter" mask="date">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date v-model="deadLineFilter">
                   <div class="row items-center justify-end">
-                    <q-btn @click="getFilterDate" v-close-popup label="Ok" color="primary" flat />
+                    <q-btn @click="getFilterDate" v-close-popup :label="t('tasks.ok')" color="primary" flat />
                   </div>
                 </q-date>
               </q-popup-proxy>
             </q-icon>
           </template>
         </q-input>
-        <q-checkbox v-model="allTasks" @update:model-value="changeAll" label="All tasks" class="all-tasks-check"/>
-        <q-btn class="clear-filter-btn" flat @click="clearFilter">Clear filter</q-btn>
+        <q-checkbox v-model="allTasks" @update:model-value="changeAll" :label="t('tasks.all')" class="all-tasks-check"/>
+        <q-btn class="clear-filter-btn" flat @click="clearFilter">{{ t('tasks.clear') }}</q-btn>
       </div>
     <div class="container_task_page">
 
 
       <div v-for="x in status" :key="x.id" class="task_container">
-        <div class="task_label">{{ x.text }}</div>
+        <div class="task_label">
+          <span>{{ x.text }}</span>
+          <div v-if="x.id === 0" class="add_task" @click="addOpen(x.id)">
+            <q-icon name="add" size="16px" />
+            <span>{{ t('tasks.add') }}</span>
+          </div>
+        </div>
         <draggable
           class="draggable"
           :list="groupedTasks[x.id]"
@@ -51,16 +57,8 @@
             />
           </template>
         </draggable>
-            <div class="add_task" @click="addOpen(x.id)">
-              <q-icon name="add" size="16px"/>
-              <span>Add task</span>
-            </div>
       </div>
     </div>
-
-      <div class="pagination">
-        <q-pagination v-model="page" :max="totalPages" direction-links/>
-      </div>
 
     <ad-dialog
       :isOpenModal="isOpenModal"
@@ -73,14 +71,16 @@
 
 <script setup>
 import draggable from 'vuedraggable'
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import TaskItem from 'pages/Cabinet/tasks/components/taskItem.vue'
 import AdDialog from 'pages/Cabinet/tasks/components/adDialog.vue'
 import { useUserStore } from 'stores/user.js'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'src/i18n/index.js'
 
 const $q = useQuasar();
 const userStore = useUserStore()
+const { t } = useI18n()
 const isOpenModal = ref(false);
 const statusId = ref(null);
 const typeFilter = ref(null);
@@ -102,9 +102,9 @@ function upsertTask(data) {
       if (index > -1) {
         tasks.value[index] = {...tasks.value[index], ...data};
       }
-      successNotify('Updated task!', 'positive')
+      successNotify(t('tasks.updated'), 'positive')
     }catch (e) {
-      errorNotify('No updated task!')
+      errorNotify(t('tasks.updateError'))
     }
   } else {
     try {
@@ -112,12 +112,11 @@ function upsertTask(data) {
         ...data,
         id: generateUniqueId()
       };
-      tasks.value.push(newTask);
       tasks.value.unshift(newTask);
 
-      successNotify('Added task!', 'positive');
+      successNotify(t('tasks.added'), 'positive');
     }catch (e) {
-      errorNotify('No added task!')
+      errorNotify(t('tasks.addError'))
     }
   }
 }
@@ -127,32 +126,25 @@ function deleteTask(data){
     if (index > -1){
       tasks.value.splice(index, 1);
     }
-    successNotify('Deleted task!', 'warning')
+    successNotify(t('tasks.deleted'), 'warning')
   }catch (e) {
-    errorNotify('No deleted task!')
+    errorNotify(t('tasks.deleteError'))
   }
 }
 
-const status = ref([
-  {id: 0, text: "Registered"},
-  {id: 1, text: "In process"},
-  {id: 2, text: "Completed"},
-  {id: 3, text: "Testing"},
-  {id: 5, text: "Verified"},
+const status = computed(() => [
+  {id: 0, text: t('status.registered')},
+  {id: 1, text: t('status.process')},
+  {id: 2, text: t('status.completed')},
+  {id: 3, text: t('status.testing')},
+  {id: 5, text: t('status.verified')},
 ])
 const cloneTask = (original) => ({ ...original });
-const page = ref(1);
-const perPage = ref(20);
-const totalPages = computed(() => Math.ceil(tasks.value.length / perPage.value))
 const groupedTasks = computed(() => {
   const result = {};
   status.value.forEach((s) => (result[s.id] = []));
 
-  const start = (page.value - 1) * perPage.value;
-  const end = start + perPage.value;
-  const paginatedTasks = tasks.value.slice(start, end);
-
-  for (const task of paginatedTasks) {
+  for (const task of tasks.value) {
     if (result[task.status]) {
       result[task.status].push(task);
     }
@@ -216,10 +208,10 @@ const tasks = ref([
   {id: 36, userId: 2, status: 3, desc: 'Description text test', text: "Task 37", taskType: 0, deadLine: '2025/07/10'},
   {id: 37, userId: 1, status: 5, desc: 'Description text test',text : "Task 38", taskType: 2, deadLine: '2025/07/10'}
 ])
-const type = ref([
-  {id: 0, text: "High"},
-  {id: 1, text: "Normal"},
-  {id: 2, text: "Low"}
+const type = computed(() => [
+  {id: 0, text: t('type.high')},
+  {id: 1, text: t('type.normal')},
+  {id: 2, text: t('type.low')}
 ])
 function getType(id) {
   const typeItem = type.value.find((item) => item.id === id)

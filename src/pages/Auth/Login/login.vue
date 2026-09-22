@@ -7,9 +7,9 @@
         outlined
         stack-label
         class="login-field"
-        :rules="[ val => !!val || 'Please type something']"
+        :rules="[ val => !!val || t('validation.required')]"
         v-model="username"
-        label="Username"
+        :label="t('auth.username')"
       >
         <template v-slot:prepend>
           <q-icon name="person" color="primary" />
@@ -21,16 +21,16 @@
         stack-label
         type="password"
         class="login-field"
-        :rules="[ val => !!val || 'Please type something']"
+        :rules="[ val => !!val || t('validation.required')]"
         v-model="password"
-        label="Password"
+        :label="t('auth.password')"
       >
         <template v-slot:prepend>
           <q-icon name="lock" color="primary" />
         </template>
       </q-input>
       <div class="btn_p">
-        <q-btn class="login-submit" :loading="loadingBtn" type="submit" color="primary" text-color="white" label="Submit" unelevated/>
+        <q-btn class="login-submit" :loading="loadingBtn" type="submit" color="primary" text-color="white" :label="t('auth.submit')" unelevated/>
       </div>
     </q-form>
   </q-card>
@@ -42,10 +42,12 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {useUserStore} from 'stores/user.js'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'src/i18n/index.js'
 
 const $q = useQuasar();
 const userStore = useUserStore();
 const router = useRouter();
+const { t } = useI18n()
 const loadingBtn = ref(false);
 const username = ref('');
 const password = ref('123456');
@@ -67,7 +69,7 @@ const showNotify = () => {
   $q.notify({
     type: 'positive',
     textColor: 'white',
-    message: 'Login success !',
+    message: t('auth.loginSuccess'),
     position: 'top',
   })
 }

@@ -1,8 +1,10 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useUserStore } from 'stores/user.js'
+import { useI18n } from 'src/i18n/index.js'
 
 const userStore = useUserStore()
+const { t } = useI18n()
 const dialog = ref(false)
 const props = defineProps({
   isOpenModal: Boolean,
@@ -14,12 +16,12 @@ function closeDialog() {
   emit('closeDialog', dialog.value)
 }
 
-const status = ref([
-  {id: 0, text: "Registered"},
-  {id: 1, text: "In process"},
-  {id: 2, text: "Completed"},
-  {id: 3, text: "Testing"},
-  {id: 5, text: "Verified"},
+const status = computed(() => [
+  {id: 0, text: t('status.registered')},
+  {id: 1, text: t('status.process')},
+  {id: 2, text: t('status.completed')},
+  {id: 3, text: t('status.testing')},
+  {id: 5, text: t('status.verified')},
 ])
 function getStatus(id) {
   const typeItem = status.value.find((item) => item.id === id)
@@ -37,10 +39,10 @@ const Task = ref({
   taskType: null,
   deadLine: '',
 })
-const type = ref([
-  { id: 0, text: 'High' },
-  { id: 1, text: 'Normal' },
-  { id: 2, text: 'Low' },
+const type = computed(() => [
+  { id: 0, text: t('type.high') },
+  { id: 1, text: t('type.normal') },
+  { id: 2, text: t('type.low') },
 ])
 function getType(id) {
   const typeItem = type.value.find((item) => item.id === id)
@@ -96,23 +98,23 @@ watch(
   <q-dialog persistent v-model="dialog">
     <q-card>
       <q-card-actions class="flex justify-between q-px-md">
-        <div class="text-h6">{{ props.element ? 'Edit' : 'Create' }} № {{ Task?.id }}</div>
+        <div class="text-h6">{{ props.element ? t('dialog.edit') : t('dialog.create') }} № {{ Task?.id }}</div>
         <q-icon @click="closeDialog" color="red" class="cursor-pointer" name="close" size="sm" />
       </q-card-actions>
       <q-card-section>
         <q-form @submit="upsertTask">
           <div>
-            <span style="text-decoration: underline">User {{ userId }}</span>
+            <span style="text-decoration: underline">{{ t('dialog.user') }} {{ userId }}</span>
             <q-chip outline color="teal" size="sm">{{ getStatus(statusId)}}</q-chip>
           </div>
           <q-input
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :rules="[ val => val && val.length > 0 || t('validation.required')]"
             :readonly="noEdit"
             clearable
             outlined
             stack-label
             class="q-my-sm form-input"
-            label="Task title"
+            :label="t('dialog.taskTitle')"
             v-model="Task.text"
           >
             <template v-slot:prepend>
@@ -120,13 +122,13 @@ watch(
             </template>
           </q-input>
           <q-input
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :rules="[ val => val && val.length > 0 || t('validation.required')]"
             :readonly="noEdit"
             clearable
             outlined
             stack-label
             class="q-my-sm form-input description-field"
-            label="Description"
+            :label="t('dialog.description')"
             v-model="Task.desc"
             type="textarea"
             autogrow
@@ -138,9 +140,9 @@ watch(
           <div class="flex justify-between items-start">
             <div style="max-width: 300px">
               <q-input
-                :rules="[ val => val && val.length > 0 || 'Please type something']"
+                :rules="[ val => val && val.length > 0 || t('validation.required')]"
                 :readonly="noEdit"
-                label="Deadline"
+                :label="t('dialog.deadline')"
                 outlined
                 stack-label
                 class="form-input"
@@ -155,7 +157,7 @@ watch(
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="Task.deadLine">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Ok" color="primary" flat />
+                          <q-btn v-close-popup :label="t('tasks.ok')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -164,7 +166,7 @@ watch(
               </q-input>
             </div>
             <q-btn :disable="noEdit" style="width: 200px; height: 48px" unelevated
-                   :label="[0, 1, 2].includes(Task.taskType) ? getType(Task.taskType) : 'Select type'"
+                   :label="[0, 1, 2].includes(Task.taskType) ? getType(Task.taskType) : t('tasks.selectType')"
                    :color="!redSelect ? 'grey' : 'red'"
             >
               <q-menu auto-close transition-show="scale" transition-hide="scale">
@@ -177,7 +179,7 @@ watch(
             </q-btn>
           </div>
           <div class="flex justify-end q-mt-sm">
-            <q-btn :disable="noEdit" type="submit" color="green" unelevated label="Save"></q-btn>
+            <q-btn :disable="noEdit" type="submit" color="green" unelevated :label="t('dialog.save')"></q-btn>
           </div>
         </q-form>
       </q-card-section>
