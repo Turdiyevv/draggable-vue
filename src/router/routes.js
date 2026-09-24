@@ -16,6 +16,10 @@ const routes = [
         component: () => import('pages/Cabinet/tasks/IndexPage.vue')
       },
       {
+        path: 'inventory',
+        component: () => import('pages/Cabinet/inventory/IndexPage.vue')
+      },
+      {
         path: 'info',
         component: () => import('pages/Cabinet/myInfo/myInfo.vue')
       }

@@ -70,10 +70,10 @@ const linksList = computed(() => [
     link: '/tasks',
   },
   {
-    title: t('nav.discord'),
-    caption: t('nav.discordCaption'),
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
+    title: t('nav.inventory'),
+    caption: t('nav.inventoryCaption'),
+    icon: 'inventory_2',
+    link: '/inventory',
   }
 ])
 const toggleDark = (val) => {
